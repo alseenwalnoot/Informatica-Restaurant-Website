@@ -10,7 +10,7 @@ import { useRef, useEffect, useState } from "react"
 
 const MotionBox = motion(Box)
 const MotionText = motion(Text)
-
+const MotionImage = motion(Image)
 export default function App() {
   const [currentView, setCurrentView] = useState("home")
   const progress = useMotionValue(0)
@@ -144,19 +144,39 @@ export default function App() {
         
       </MotionBox>
 
-      <MotionText
-        fontFamily="'SF Pro Display Bold'"
-        fontWeight="900"
-        fontSize="7xl"
-        position="absolute"
-        top="38%"
-        left="11.33%"
-        transform="translate(-50%, -50%)"
-        color="#161616"
-        style={{ x: textX, opacity: textOpacity }}
-      >
-        Good. Food. <br /> Delivered.
-      </MotionText>
+      <MotionBox
+  position="absolute"
+  
+  transform="translate(-50%, -50%)"
+  style={{ x: textX, opacity: textOpacity }}
+  display="flex"
+  flexDir="column"
+  alignItems="center"
+>   
+  <Box
+    top="18%"
+    left="11.33%"
+    w="220px"
+    h="220px"
+    bgImage="url('/logo-161616.png')"
+    bgSize="contain"
+    bgRepeat="no-repeat"
+    bgPosition="center"
+    mb="6"
+  />
+
+  <Text
+    top="38%"
+    left="20.33%"
+    fontFamily="'SF Pro Display Bold'"
+    fontWeight="900"
+    fontSize="7xl"
+    color="#161616"
+    textAlign="center"
+  >
+    Good. Food. <br /> Delivered.
+  </Text>
+  </MotionBox>
 
       {currentView === "menu" && <MenuView />}
       {currentView === "order" && <OrderView />}
