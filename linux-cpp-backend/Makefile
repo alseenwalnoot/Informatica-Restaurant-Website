@@ -1,4 +1,4 @@
-BACKEND_DIR=../cppbackend
+BACKEND_DIR=../linux-cpp-backend
 FRONTEND_DIR=../react-frontend
 BUILD_DIR=$(BACKEND_DIR)/build
 TEMPLATES_DIR=$(BUILD_DIR)/templates
