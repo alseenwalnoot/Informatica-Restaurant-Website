@@ -25,4 +25,5 @@ run:
 	cd build && ./app
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -rf $(FRONTEND_DIR)/dist
 
