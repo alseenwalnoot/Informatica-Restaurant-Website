@@ -58,10 +58,10 @@ int main() {
     if (sqlite3_open(dbPath.c_str(), &db) != SQLITE_OK) {
         printf("Failed to open DB: %s\n", sqlite3_errmsg(db));
     }
-
+    
     crow::SimpleApp app;
     crow::mustache::set_base(".");
-
+    printf("On Windows you might need to use http://localhost:PORT\n");
     CROW_ROUTE(app, "/api/getmeal/<int>")
     ([&](int meal_id) {
         Meal meal;

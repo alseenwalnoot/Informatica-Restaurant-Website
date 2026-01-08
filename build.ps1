@@ -4,7 +4,7 @@ $ErrorActionPreference = "Stop"
 $root = Get-Location
 
 # Paths
-$backend   = "$root\cppbackend"
+$backend   = "$root\windows-cpp-backend"
 $frontend  = "$root\react-frontend"
 $build     = "$backend\build"
 $release   = "$root\release"

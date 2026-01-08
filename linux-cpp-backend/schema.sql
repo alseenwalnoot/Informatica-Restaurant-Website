@@ -93,7 +93,9 @@ INSERT INTO meals (category, name, description, price, image) VALUES
 ('side', 'Creamed Spinach', 'Velvety spinach in cream sauce.', 6.40, ''),
 ('side', 'Corn Ribs', 'Quartered corn glazed with chili butter.', 6.80, ''),
 ('side', 'Feta Tomato Salad', 'Diced tomato, cucumber and feta.', 5.70, ''),
-('side', 'Crispy Polenta Bites', 'Crunchy bites with parmesan.', 6.10, '');
+('side', 'Crispy Polenta Bites', 'Crunchy bites with parmesan.', 6.10, ''),
+('side', 'Twisted Fries', 'Crunchy fries with seasoning.', 3.10, ''),
+('side', 'Crispy Fried Pork', 'Fried pork pieces.', 6.20, '');
 
 INSERT INTO meals (category, name, description, price, image) VALUES
 ('drink', 'Fresh Orange Juice', 'Cold-pressed from ripe oranges.', 4.80, ''),

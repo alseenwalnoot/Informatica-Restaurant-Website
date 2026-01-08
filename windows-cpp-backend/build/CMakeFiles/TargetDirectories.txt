@@ -1,0 +1,3 @@
+C:/Users/dusti/Documents/Developer/Informatica-Restaurant-Website/windows-cpp-backend/build/CMakeFiles/app.dir
+C:/Users/dusti/Documents/Developer/Informatica-Restaurant-Website/windows-cpp-backend/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/dusti/Documents/Developer/Informatica-Restaurant-Website/windows-cpp-backend/build/CMakeFiles/ZERO_CHECK.dir

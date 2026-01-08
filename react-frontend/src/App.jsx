@@ -1,5 +1,5 @@
 
-import { Box, Flex, Image, Center, VStack, Text, Button, useBreakpointValue, Tabs, Spacer } from "@chakra-ui/react"
+import { Box, Flex, Image, Center, VStack, Text, Button, useBreakpointValue, Tabs, Spacer, HStack, Separator } from "@chakra-ui/react"
 //import DishCard from "./components/DishCard"
 //import MenuGallery from "./components/MenuGallery"
 import HoverMenu from "./components/HoverText"
@@ -17,10 +17,13 @@ export default function App() {
   const smooth = useSpring(progress, { stiffness: 200, damping: 30 })
 
   const bg1Scale = useTransform(smooth, [0, 1], [1, 1.05])
-  const bg2Scale = useTransform(smooth, [0, 1], [1.05, 1])
+  const bg2Scale = useTransform(smooth, [1, 0], [1.05, 1])
   const bg1Opacity = useTransform(smooth, [0, 1], [1, 0])
   const bg2Opacity = useTransform(smooth, [0, 1], [0, 1])
-  const textX = useTransform(smooth, [0, 1], ["0%", "-50%"])
+
+  const textX = useTransform(smooth, [0, 1], [0, -200])
+  const imgX = useTransform(smooth, [0, 1], [0, 800])
+
   const textOpacity = useTransform(smooth, [0, 1], [1, 0])
 
   const containerRef = useRef(null)
@@ -28,28 +31,22 @@ export default function App() {
   const internal = useRef({ value: 0 })
   const currentViewRef = useRef("home")
   useEffect(() => {
-  currentViewRef.current = currentView
+  currentViewRef.current = currentView 
 }, [currentView])
-
   useEffect(() => {
   const el = containerRef.current
   if (!el) return
 
+  if (currentView !== "home") return
+
   const onWheel = (e) => {
-    const cv = currentViewRef.current
-    console.log(cv)
-
-    if (cv !== "home") {
-      progress.set(100)
-      return
-    }
-
-    e.preventDefault()
     const delta = e.deltaY || e.deltaX
     const step = delta * 0.0012
+
     let next = internal.current.value + step
     if (next < 0) next = 0
     if (next > 1) next = 1
+
     internal.current.value = next
     progress.set(next)
   }
@@ -60,12 +57,15 @@ export default function App() {
 
   const onTouchMove = (e) => {
     if (touchStartX.current === null) return
+
     const x = e.touches?.[0]?.clientX ?? 0
     const delta = touchStartX.current - x
     const step = delta * 0.0015
+
     let next = internal.current.value + step
     if (next < 0) next = 0
     if (next > 1) next = 1
+
     internal.current.value = next
     progress.set(next)
     touchStartX.current = x
@@ -75,9 +75,9 @@ export default function App() {
     touchStartX.current = null
   }
 
-  el.addEventListener("wheel", onWheel, { passive: false })
+  el.addEventListener("wheel", onWheel, { passive: true })
   el.addEventListener("touchstart", onTouchStart, { passive: true })
-  el.addEventListener("touchmove", onTouchMove, { passive: false })
+  el.addEventListener("touchmove", onTouchMove, { passive: true })
   el.addEventListener("touchend", onTouchEnd, { passive: true })
 
   return () => {
@@ -86,7 +86,8 @@ export default function App() {
     el.removeEventListener("touchmove", onTouchMove)
     el.removeEventListener("touchend", onTouchEnd)
   }
-}, [])
+}, [currentView])
+
 
 
   const items = [
@@ -111,22 +112,26 @@ export default function App() {
         left={0}
         w="100%"
         h="100%"
-        bgImage="url('/bg1.png')"
-        bgSize="cover"
+        bgImage="url('/bg_no_logo.png')"
+        //bgSize="cover"
+        
         bgPosition="center"
-        bgRepeat="no-repeat"
+        bgRepeat="repeat"
         style={{ scale: bg1Scale, opacity: bg1Opacity }}
       />
+      
+
+
       <MotionBox
         position="absolute"
         top={0}
         left={0}
         w="100%"
         h="100%"
-        bgImage="url('/bg2.png')"
-        bgSize="cover"
+        bgImage="url('/bg_no_logo.png')"
+        //bgSize="cover"
         bgPosition="center"
-        bgRepeat="no-repeat"
+        bgRepeat="repeat"
         style={{ scale: bg2Scale, opacity: bg2Opacity }}
       >
         <Box
@@ -140,46 +145,62 @@ export default function App() {
         {currentView === "home" && <HoverMenu items={items} /> }
           
         
-        {/*<HoverText text="Order" top="38%" left="18%"></HoverText>*/}
-        
+
       </MotionBox>
-
-      <MotionBox
+      <Box
   position="absolute"
-  
+  left="50%"
+  top="50%"
   transform="translate(-50%, -50%)"
-  style={{ x: textX, opacity: textOpacity }}
+  w="100%"
+  maxW="1200px"
+  px="6"
   display="flex"
-  flexDir="column"
   alignItems="center"
->   
-  <Box
-    top="18%"
-    left="11.33%"
-    w="220px"
-    h="220px"
-    bgImage="url('/logo-161616.png')"
-    bgSize="contain"
-    bgRepeat="no-repeat"
-    bgPosition="center"
-    mb="6"
-  />
+  justifyContent="space-between"
+>
+  {/* LEFT: logo + text */}
+  <MotionBox
+    style={{ x: textX, opacity: textOpacity }}
+    display="flex"
+    flexDir="column"
+      alignItems="flex-start"
+    gap="6"
+  >
+    
 
-  <Text
-    top="38%"
-    left="20.33%"
-    fontFamily="'SF Pro Display Bold'"
+    <MotionText
+      fontFamily="'SF Pro Display Bold'"
     fontWeight="900"
-    fontSize="7xl"
-    color="#161616"
+    fontSize={["4xl", "5xl", "6xl", "7xl"]}
+    color="#131313ff"
     textAlign="center"
   >
-    Good. Food. <br /> Delivered.
-  </Text>
+    Good. Food. <br /> Delivered. <br /> <Separator/> PrestigeOpulent
+  </MotionText>
   </MotionBox>
 
-      {currentView === "menu" && <MenuView />}
+  {/* RIGHT: hero image */}
+  <MotionImage
+    src="/hamburger_cheese_onion.png"
+    style={{ x: imgX, opacity: textOpacity }}
+    maxW="45vw"
+    maxH="70vh"
+    objectFit="contain"
+    pointerEvents="none"
+  />
+  
+</Box>
+
+
+
+      {currentView === "menu" && (
+  <MenuView onClose={() => setCurrentView("home")} />
+)}
       {currentView === "order" && <OrderView />}
+      
     </Box>
+
+    
   )
 }

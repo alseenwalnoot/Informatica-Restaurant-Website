@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\dusti\Documents\Developer\Informatica-Restaurant-Website\windows-cpp-backend\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\dusti\Documents\Developer\Informatica-Restaurant-Website\windows-cpp-backend\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{E8C9B453-AAC8-395B-950A-0731236092D5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

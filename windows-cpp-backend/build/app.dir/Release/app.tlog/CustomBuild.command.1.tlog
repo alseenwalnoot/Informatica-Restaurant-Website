@@ -1,0 +1,10 @@
+^C:\USERS\DUSTI\DOCUMENTS\DEVELOPER\INFORMATICA-RESTAURANT-WEBSITE\WINDOWS-CPP-BACKEND\CMAKELISTS.TXT
+setlocal
+E:\CMAKE\bin\cmake.exe -SC:/Users/dusti/Documents/Developer/Informatica-Restaurant-Website/windows-cpp-backend -BC:/Users/dusti/Documents/Developer/Informatica-Restaurant-Website/windows-cpp-backend/build --check-stamp-file C:/Users/dusti/Documents/Developer/Informatica-Restaurant-Website/windows-cpp-backend/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
