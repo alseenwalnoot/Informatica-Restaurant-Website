@@ -1,16 +1,17 @@
 
-import { Box, Flex, Image, Center, VStack, Text, Button, useBreakpointValue, Tabs, Spacer, HStack, Separator } from "@chakra-ui/react"
+import { Box, Flex, Image, Center, VStack, Text, Button, Icon, Tabs, Spacer, HStack, Separator } from "@chakra-ui/react"
 //import DishCard from "./components/DishCard"
 //import MenuGallery from "./components/MenuGallery"
 import HoverMenu from "./components/HoverText"
 import MenuView from "./components/MenuView"
 import OrderView from "./components/OrderView"
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion"
+import { motion, useMotionValue, useTransform, useSpring, animate } from "framer-motion"
 import { useRef, useEffect, useState } from "react"
-
+import { MoveRight, Minus } from "lucide-react"
 const MotionBox = motion(Box)
 const MotionText = motion(Text)
 const MotionImage = motion(Image)
+const MotionIcon = motion.create(Icon)
 export default function App() {
   const [currentView, setCurrentView] = useState("home")
   const progress = useMotionValue(0)
@@ -24,12 +25,29 @@ export default function App() {
   const textX = useTransform(smooth, [0, 1], [0, -200])
   const imgX = useTransform(smooth, [0, 1], [0, 800])
 
+  const iconBaseX = useTransform(smooth, [0, 1], ["0%", "20%"])
+const iconWiggle = useMotionValue(0)
+
   const textOpacity = useTransform(smooth, [0, 1], [1, 0])
 
   const containerRef = useRef(null)
   const touchStartX = useRef(null)
   const internal = useRef({ value: 0 })
   const currentViewRef = useRef("home")
+  useEffect(() => {
+  const controls = animate(iconWiggle, [0, 10, 0, 2, 0], {
+    duration: 1.6,
+    ease: "easeInOut",
+    repeat: Infinity,
+    repeatDelay: 2,
+  })
+
+  return () => controls.stop()
+}, [])
+  const iconX = useTransform(
+  [iconBaseX, iconWiggle],
+  ([base, wiggle]) => `calc(${base} + ${wiggle}px)`
+)
   useEffect(() => {
   currentViewRef.current = currentView 
 }, [currentView])
@@ -176,7 +194,7 @@ export default function App() {
     color="#131313ff"
     textAlign="center"
   >
-    Good. Food. <br /> Delivered. <br /> <Separator/> PrestigeOpulent
+    Good. Food. <br /> Delivered. <br /> <Separator/> PrestigeOpulent<Center><MotionIcon style={{x: iconX}}size="8xl" color="gray"><MoveRight size={120} strokeWidth={1.5}/></MotionIcon></Center>
   </MotionText>
   </MotionBox>
 
