@@ -1,9 +1,14 @@
-# **Windows port**
-## Stap 1 JavaScript
+
+# **[Prestige Opulent Website](https://walnutstudios.uk)**
+## Voorwoord
+Het is lastig om een react website met frontend en backend multiplatform te maken, ik heb dit wel gedaan, hij runt nu op linux EN windows, voor windows kan je de
+releases/app.exe gebruiken (dubbelklikken vanuit de folder) (deze heb je gekregen in het zip bestandje), dit launcht de backend en frontend op http://localhost:8000
+## **Windows port**
+### Stap 1 JavaScript
 Download NodeJS van https://nodejs.org/en
 Als het vraagt om extra dingen/tools, KLIK JA dit scheelt je zelf msvc installeren, want Node doet dit dan allemaal voor je
 
-## Stap 2 SQLite
+### Stap 2 SQLite
 SQLite is nodig voor database handling en asio voor Crow's webserver handling,
 installeer eerst vcpkg:
 ```
@@ -18,7 +23,7 @@ dan asio en sqlite installeren:
 ```
 en als laatste vcpkg globaal maken:
 ```setx VCPKG_ROOT "PATH\TO\VCPKG"```
-## Stap 2 C++ MSVC 
+### Stap 2 C++ MSVC 
 ### (als je het niet heb gedaan bij NodeJS Installer)
 Je zult Visual Studio Community moeten downloaden van
 https://visualstudio.microsoft.com/
