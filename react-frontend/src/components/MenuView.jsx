@@ -1,4 +1,4 @@
-import { Box, Text, Center, Carousel, useCarousel, Icon, CloseButton, Button } from "@chakra-ui/react"
+import { Flex, Box, Text, Center, Carousel, useCarousel, Icon, CloseButton, Button, VStack, HStack } from "@chakra-ui/react"
 import {ArrowLeftToLine} from "lucide-react"
 import { useEffect, useState, useRef } from "react";
 /*
@@ -22,8 +22,13 @@ async function getMealstest() {
     return errmsg;
   }
 }
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1)
+
+
+function AdditionBox() {
+  return(
+    <Box          // ← shifts it next to panel
+        w="9.5dvw" h="10dvh" borderRadius="10px" bg="rgba(255, 255, 255, 1)" color="white"></Box>
+  )
 }
 
 export default function MenuView({ onClose }) {
@@ -96,9 +101,34 @@ const category = data.meals
           h="60%"
           bg="rgba(22, 22, 22, 0.45)"
           backdropFilter="blur(12px)"
-          borderRadius="14px" //
+          borderRadius="14px" 
           p="20px" 
           color="white">
+            
+            <Text 
+              fontFamily="'SF Pro Display Bold'"
+              fontSize={["1xl", "2xl"]}
+              fontWeight="900"
+              >Quantity
+            </Text>
+            <Text 
+              fontFamily="'SF Pro Display Bold'"
+              fontSize={["1xl", "2xl"]}
+              fontWeight="900"
+              >Additions
+            </Text>
+              <Flex gap="2.5">
+                <VStack><AdditionBox/>
+              <AdditionBox/></VStack>
+              <VStack><AdditionBox/>
+              <AdditionBox/></VStack>
+            </Flex>
+            <Text
+              fontFamily="'SF Pro Display Bold'"
+              fontSize={["1xl", "2xl"]}
+              fontWeight="900"
+              >Delivery Address
+            </Text>
            <Button 
             w="100%"
             h="15%"

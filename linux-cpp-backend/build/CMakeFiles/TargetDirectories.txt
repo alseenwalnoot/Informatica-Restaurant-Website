@@ -1,0 +1,3 @@
+/home/dusti/Dev/InformaticaWebsite/linux-cpp-backend/build/CMakeFiles/app.dir
+/home/dusti/Dev/InformaticaWebsite/linux-cpp-backend/build/CMakeFiles/edit_cache.dir
+/home/dusti/Dev/InformaticaWebsite/linux-cpp-backend/build/CMakeFiles/rebuild_cache.dir
