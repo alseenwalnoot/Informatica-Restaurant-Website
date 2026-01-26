@@ -1,0 +1,71 @@
+import { Box, Button, Text, VStack, Flex, Spacer, Center } from "@chakra-ui/react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Boxes } from "lucide-react"
+import { useState } from "react"
+
+const MotionButton = motion.create(Button)
+const MotionBox = motion.create(Box)
+const MotionText = motion.create(Text)
+
+  const items = [
+    { label: "Menu", hoverText: "Pasta's\n Burgers\n Steakes\n Sides", top: "30%", left: "18%", onClick: () => setCurrentView("menu") },
+    { label: "Order", hoverText: "Track\n Info", top: "38%", left: "18%", onClick: () => setCurrentView("order") },
+    { label: "Locations", hoverText: "Pickup\n Dine-In", top: "46%", left: "18%", onClick: () => setCurrentView("locations") },
+  ]
+
+export default function HoverMenu() {
+  return (
+    <Center w="100vw" h="100vh">
+      <VStack
+        align="flex-start"
+        spacing={{ base: 4, md: 6, lg: 8 }}
+      >
+        <Button
+          variant="ghost"
+          fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
+          fontWeight="900"
+          fontFamily="'SF Pro Display Bold'"
+          color="#E6E6E6"
+          _hover={{ bg: "transparent", textDecoration: "underline" }}
+        >
+          Menu
+        </Button>
+
+        <Button
+          variant="ghost"
+          fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
+          fontWeight="900"
+          fontFamily="'SF Pro Display Bold'"
+          color="#E6E6E6"
+          _hover={{ bg: "transparent", textDecoration: "underline" }}
+        >
+          Order
+        </Button>
+
+        <Button
+          variant="ghost"
+          fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
+          fontWeight="900"
+          fontFamily="'SF Pro Display Bold'"
+          color="#E6E6E6"
+          _hover={{ bg: "transparent", textDecoration: "underline" }}
+        >
+          Locations
+        </Button>
+
+        <Spacer />
+
+        <Button
+          variant="ghost"
+          fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+          fontWeight="900"
+          fontFamily="'SF Pro Display Bold'"
+          color="#E6E6E6"
+          _hover={{ bg: "transparent", textDecoration: "underline" }}
+        >
+          About →
+        </Button>
+      </VStack>
+    </Center>
+  )
+}

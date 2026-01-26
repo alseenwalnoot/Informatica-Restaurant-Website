@@ -8,7 +8,7 @@ const errmsg = {
 }
 async function getMealstest() {
   try {
-    const res = await fetch("/api/getmeals/1-105");
+    const res = await fetch("http://localhost:8000/api/getmeals/1-105");
     if (!res.ok) return errmsg;
     const json = await res.json();
     return json ?? errmsg;
@@ -16,6 +16,17 @@ async function getMealstest() {
     return errmsg;
   }
 }
+async function getMeals(from, to) {
+  try {
+    const res = await fetch('http://localhost:8000/api/getmeals/${from}-${to}');
+    if (!res.ok) return errmsg;
+    const json = await res.json();
+    return json ?? errmsg;
+  } catch {
+    return errmsg;
+  }
+}
+
 const compactInput = {
   size: "xs",
   variant: "flushed",
@@ -34,43 +45,10 @@ function AdditionBox() {
 
 export default function MenuView({ onClose }) {
   const [data, setData] = useState(errmsg);
-  const [cart, setCart] = useState([])
-  const [qty, setQty] = useState({})
-  function getQty(id) {
-    return qty[id] ?? 1
-  }
-
-  function incQty(id) {
-    setQty(q => ({ ...q, [id]: getQty(id) + 1 }))
-    console.log(getQty(id))
-  }
-
-  function decQty(id) {
-    setQty(q => ({ ...q, [id]: Math.max(1, getQty(id)) }))
-    console.log(qty[id])
-  }
-
-  function addToCart(id) {
-    const amount = getQty(id) - 1
-    setCart(c => [...c, ...Array(amount).fill(id)])
-    console.clear()
-    console.log(cart)
-    console.log(qty)
-  }
-  function initQty(meals) {
-    const initial = {}
-    meals.forEach(m => {
-      initial[m.id] = 0
-    })
-    setQty(initial)
-  }
 
   useEffect(() => {
-    getMealstest().then(data => {
-      setData(data)
-      initQty(data.meals)
-    })
-  }, [])
+    getMealstest().then(setData);
+  }, []);
 
 
 
@@ -135,19 +113,7 @@ export default function MenuView({ onClose }) {
             {category}
           </Text>
         </Center>
-        <VStack spacing="1" align="stretch">
-          {Object.entries(cart)
-            .filter(([id, qty]) => qty > 0)
-            .map(([id, qty]) => {
-              const meal = data.meals.find((m) => m.id === Number(id));
-              if (!meal) return null;
-              return (
-                <Text key={id} fontSize="md" fontWeight="700">
-                  {qty}x: {meal.name}
-                </Text>
-              );
-            })}
-        </VStack>
+        
 
         <Box
           position="absolute"
@@ -288,7 +254,7 @@ export default function MenuView({ onClose }) {
                         <IconButton
                           variant="plain"
                           color="rgba(129, 201, 214, 0.66)"
-                          onClick={() => decQty(it.id)}
+                          /*onClick={() => decQty(it.id)}*/
                         >
                           <ChevronLeft />
                         </IconButton>
@@ -300,14 +266,14 @@ export default function MenuView({ onClose }) {
                           px="12px"
                           py="6px"
                         >
-                          <Text>{getQty(it.id)}</Text>
+                          <Text>0</Text>
 
                         </Box>
 
                         <IconButton
                           variant="plain"
                           color="rgba(129, 201, 214, 0.66)"
-                          onClick={() => incQty(it.id)}
+                          /*onClick={() => incQty(it.id)}*/
                         >
                           <ChevronRight />
                         </IconButton>
@@ -318,7 +284,7 @@ export default function MenuView({ onClose }) {
                           borderRadius="12px"
                           bg="rgba(129, 201, 214, 0.66)"
                           color="white"
-                          onClick={() => addToCart(it.id)}
+                          onClick={() => console.log(it.id)}
                         >
                           Add
                         </Button>

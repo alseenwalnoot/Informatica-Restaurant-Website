@@ -1,17 +1,17 @@
 
 import { Box, Flex, Image, Center, VStack, Text, Button, Icon, Tabs, Spacer, HStack, Separator } from "@chakra-ui/react"
 
-import HoverMenu from "./components/HoverText"
+import HoverMenu from "./components/HoverMenu"
 import MenuView from "./components/MenuView"
 import OrderView from "./components/OrderView"
 import { motion, useMotionValue, useTransform, useSpring, animate } from "framer-motion"
 import { useRef, useEffect, useState } from "react"
 import { MoveRight, Minus } from "lucide-react"
-const MotionBox = motion(Box)
-const MotionText = motion(Text)
-const MotionImage = motion(Image)
+const MotionBox = motion.create(Box)
+const MotionText = motion.create(Text)
+const MotionImage = motion.create(Image)
 const MotionIcon = motion.create(Icon)
-export default function App() {
+export default function DesktopView() {
   const [currentView, setCurrentView] = useState("home")
   const progress = useMotionValue(0)
   const smooth = useSpring(progress, { stiffness: 200, damping: 30 })
@@ -107,11 +107,7 @@ export default function App() {
 
 
 
-  const items = [
-    { label: "Menu", hoverText: "Pasta's\n Burgers\n Steakes\n Sides", top: "30%", left: "18%", onClick: () => setCurrentView("menu") },
-    { label: "Order", hoverText: "Track\n Info", top: "38%", left: "18%", onClick: () => setCurrentView("order") },
-    { label: "Locations", hoverText: "Pickup\n Dine-In", top: "46%", left: "18%", onClick: () => setCurrentView("locations") },
-  ]
+
 
   return (
     <Box
@@ -159,7 +155,7 @@ export default function App() {
           h="100%"
           bg="rgba(0,0,0,0.4)"
         />
-        {currentView === "home" && <HoverMenu items={items} />}
+        {currentView === "home" && <HoverMenu/>}
 
 
 

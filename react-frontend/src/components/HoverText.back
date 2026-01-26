@@ -2,22 +2,13 @@ import { Box, Button, Text } from "@chakra-ui/react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
 
-const MotionButton = motion(Button)
-const MotionText = motion(Text)
-
-
+const MotionButton = motion.create(Button)
+const MotionBox = motion.create(Box)
+const MotionText = motion.create(Text)
 
 const HoverMenu = ({ items }) => {
-  // index of hovered item or null
   const [hovered, setHovered] = useState(null)
-
-
-  // tweak this to match the height of the hover text (px)
   const SHIFT_PX = 135
-
-  // configuration for each item: label, hover text, absolute top/left
-
-
   return (
     <Box position="relative" w="100%" h="100%">
       {items.map((it, i) => {
@@ -28,7 +19,6 @@ const HoverMenu = ({ items }) => {
             position="absolute"
             top={it.top}
             left={it.left}
-            transform="translateY(-50%)"
           >
             <MotionButton
               onMouseEnter={() => setHovered(i)}
@@ -41,31 +31,32 @@ const HoverMenu = ({ items }) => {
               bg="transparent"
               _hover={{ bg: "transparent" }}
               _active={{ bg: "transparent" }}
-              animate={{ y: shouldShiftDown ? SHIFT_PX : 0 }}
+              animate={{ y: shouldShiftDown ? SHIFT_PX : 10 }}
               transition={{ type: "spring", stiffness: 300, damping: 28 }}
             >
               {it.label}
             </MotionButton>
 
-            <Box position="relative" height={`${SHIFT_PX}px`} mt="2" left="20%">
+            <MotionBox position="relative" height={`${SHIFT_PX}px`} mt="2" left="20%">
               <AnimatePresence>
                 {hovered === i && (
                   <MotionText
-                    initial={{ opacity: 0, y: -6 }}
+                    initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
+                    exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.22 }}
                     fontFamily="'SF Pro Display'"
                     fontWeight="600"
                     fontSize="2xl"
                     color="#E6E6E6"
                     whiteSpace="pre-line"
+                    onClick={it.onClick}
                   >
                     {it.hoverText}
                   </MotionText>
                 )}
               </AnimatePresence>
-            </Box>
+            </MotionBox>
           </Box>
         )
       })}
