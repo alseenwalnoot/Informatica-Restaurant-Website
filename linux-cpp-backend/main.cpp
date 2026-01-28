@@ -42,6 +42,7 @@ bool getMeal(sqlite3* db, int meal_id, Meal& meal) { //we have 100 meals startin
     return false;
 }
 
+
 int main() {
     sqlite3* db;
     sqlite3_open("../meals.db", &db);

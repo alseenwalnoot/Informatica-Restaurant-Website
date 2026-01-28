@@ -1,11 +1,8 @@
 import { Box, Button, Text } from "@chakra-ui/react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
-
 const MotionButton = motion.create(Button)
-const MotionBox = motion.create(Box)
 const MotionText = motion.create(Text)
-
 const HoverMenu = ({ items }) => {
   const [hovered, setHovered] = useState(null)
   const SHIFT_PX = 135
@@ -19,7 +16,7 @@ const HoverMenu = ({ items }) => {
             position="absolute"
             top={it.top}
             left={it.left}
-          >
+            transform="translateY(-50%)" >
             <MotionButton
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
@@ -31,34 +28,28 @@ const HoverMenu = ({ items }) => {
               bg="transparent"
               _hover={{ bg: "transparent" }}
               _active={{ bg: "transparent" }}
-              animate={{ y: shouldShiftDown ? SHIFT_PX : 10 }}
-              transition={{ type: "spring", stiffness: 300, damping: 28 }}
-            >
+              animate={{ y: shouldShiftDown ? SHIFT_PX : 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }} >
               {it.label}
             </MotionButton>
-
-            <MotionBox position="relative" height={`${SHIFT_PX}px`} mt="2" left="20%">
+            <Box position="relative" height={`${SHIFT_PX}px`} mt="2" left="20%">
               <AnimatePresence>
                 {hovered === i && (
                   <MotionText
-                    initial={{ opacity: 0, y: -4 }}
+                    initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
+                    exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.22 }}
                     fontFamily="'SF Pro Display'"
                     fontWeight="600"
                     fontSize="2xl"
                     color="#E6E6E6"
-                    whiteSpace="pre-line"
-                    onClick={it.onClick}
-                  >
+                    whiteSpace="pre-line" >
                     {it.hoverText}
-                  </MotionText>
-                )}
+                  </MotionText>)}
               </AnimatePresence>
-            </MotionBox>
-          </Box>
-        )
+            </Box>
+          </Box>)
       })}
       <Button
         fontFamily="'SF Pro Display Bold'"
@@ -69,13 +60,7 @@ const HoverMenu = ({ items }) => {
         left="18%"
         color="#E6E6E6"
         bg="rgba(255,255,255,0)"
-        onClick={() => window.open("https://github.com/alseenwalnoot/Informatica-Restaurant-Website", "_blank")}
-      >
-        About 🠊
-      </Button>
-
-    </Box>
-  )
+        onClick={() => window.open("https://github.com/alseenwalnoot/Informatica-Restaurant-Website", "_blank")} > About 🠊 </Button>
+    </Box >)
 }
-
-export default HoverMenu; 
+export default HoverMenu;

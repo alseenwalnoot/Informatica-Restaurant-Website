@@ -14,6 +14,7 @@ const MotionText = motion.create(Text)
   ]
 
 export default function HoverMenu() {
+  const [hovered, setHovered] = useState(null)
   return (
     <Center w="100vw" h="100vh">
       <VStack
@@ -21,6 +22,8 @@ export default function HoverMenu() {
         spacing={{ base: 4, md: 6, lg: 8 }}
       >
         <Button
+          onMouseEnter={() => console.log("mouse over")}
+          onMouseLeave={() => console.log("mouse over")}
           variant="ghost"
           fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
           fontWeight="900"
@@ -32,12 +35,14 @@ export default function HoverMenu() {
         </Button>
 
         <Button
+        
           variant="ghost"
           fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
           fontWeight="900"
           fontFamily="'SF Pro Display Bold'"
           color="#E6E6E6"
           _hover={{ bg: "transparent", textDecoration: "underline" }}
+          
         >
           Order
         </Button>
