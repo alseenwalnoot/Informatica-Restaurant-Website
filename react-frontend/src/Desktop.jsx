@@ -1,7 +1,7 @@
 
 import { Box, Flex, Image, Center, VStack, Text, Button, Icon, Tabs, Spacer, HStack, Separator } from "@chakra-ui/react"
 
-import HoverMenu from "./components/HoverText"
+import HomeView from "./components/HoverText"
 import MenuView from "./components/MenuView"
 import OrderView from "./components/OrderView"
 import { motion, useMotionValue, useTransform, useSpring, animate } from "framer-motion"
@@ -108,7 +108,7 @@ export default function DesktopView() {
   const items = [
     { label: "Menu", hoverText: "Pasta's\n Burgers\n Steakes\n Sides", top: "30%", left: "18%", onClick: () => setCurrentView("menu") },
     { label: "Order", hoverText: "Track\n Info", top: "38%", left: "18%", onClick: () => setCurrentView("order") },
-    { label: "Locations", hoverText: "Pickup\n Dine-In", top: "46%", left: "18%", onClick: () => setCurrentView("locations") },
+   // { label: "Locations", hoverText: "Pickup\n Dine-In", top: "46%", left: "18%", onClick: () => setCurrentView("locations") },
   ]
 
   return (
@@ -157,7 +157,7 @@ export default function DesktopView() {
           h="100%"
           bg="rgba(0,0,0,0.4)"
         />
-        {currentView === "home" && <HoverMenu items={items}/>}
+        {currentView === "home" && <HomeView items={items}/> }
 
 
 

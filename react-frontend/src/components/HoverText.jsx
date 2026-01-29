@@ -1,11 +1,15 @@
 import { Box, Button, Text } from "@chakra-ui/react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
+import { MapContainer, TileLayer, Marker } from "react-leaflet"
+import "leaflet/dist/leaflet.css"
 const MotionButton = motion.create(Button)
 const MotionText = motion.create(Text)
-const HoverMenu = ({ items }) => {
+
+const HomeView = ({ items }) => {
   const [hovered, setHovered] = useState(null)
   const SHIFT_PX = 135
+  const SCHIEDAM = [51.9167, 4.3986]
   return (
     <Box position="relative" w="100%" h="100%">
       {items.map((it, i) => {
@@ -61,6 +65,32 @@ const HoverMenu = ({ items }) => {
         color="#E6E6E6"
         bg="rgba(255,255,255,0)"
         onClick={() => window.open("https://github.com/alseenwalnoot/Informatica-Restaurant-Website", "_blank")} > About 🠊 </Button>
+
+      <Box
+        position="absolute"
+        top="15%"
+        right="10%"
+        w="40%"
+        h="70%"
+        bg="rgba(22,22,22,0.45)"
+        backdropFilter="blur(12px)"
+        borderRadius="18px"
+        p="12px"
+        color="white"
+      >
+        <MapContainer
+          center={SCHIEDAM}
+          zoom={13}
+          style={{ width: "100%", height: "100%", borderRadius: "12px" }}
+        >
+          <TileLayer
+            attribution="© OpenStreetMap contributors"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+
+          <Marker position={SCHIEDAM} />
+        </MapContainer>
+      </Box>
     </Box >)
 }
-export default HoverMenu;
+export default HomeView;
