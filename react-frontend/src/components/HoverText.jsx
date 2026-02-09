@@ -1,60 +1,68 @@
-import { Box, Button, Text } from "@chakra-ui/react"
+import { Box, Button, HStack, IconButton, Text, Spacer } from "@chakra-ui/react"
 import { motion, AnimatePresence } from "framer-motion"
-import { useState } from "react"
-import { MapContainer, TileLayer, Marker } from "react-leaflet"
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
+import { ChevronLeft, ChevronRight, Icon } from "lucide-react"
+import { useState, useEffect } from "react"
 import "leaflet/dist/leaflet.css"
 const MotionButton = motion.create(Button)
 const MotionText = motion.create(Text)
 
+const LOCATIONS = [
+  {
+    name: "Schiedam",
+    coords: [51.9167, 4.3986],
+  },
+  {
+    name: "Rotterdam",
+    coords: [51.9244, 4.4777],
+  },
+  {
+    name: "Delft",
+    coords: [52.0116, 4.3571],
+  },
+  {
+    name: "Epstein's gooncave",
+    coords: [51.9055206802406, 4.403329838541286],
+  }
+]
+
+const FlyToLocation = ({ coords }) => {
+  const map = useMap()
+
+  useEffect(() => {
+    map.flyTo(coords, map.getZoom(), {
+      duration: 0.6,
+      easeLinearity: 0.25,
+    })
+  }, [coords])
+
+  return null
+}
+
 const HomeView = ({ items }) => {
-  const [hovered, setHovered] = useState(null)
-  const SHIFT_PX = 135
-  const SCHIEDAM = [51.9167, 4.3986]
+  const [index, setIndex] = useState(0)
+  const location = LOCATIONS[index]
+
+  const prev = () =>
+    setIndex((i) => (i - 1 + LOCATIONS.length) % LOCATIONS.length)
+
+  const next = () =>
+    setIndex((i) => (i + 1) % LOCATIONS.length)
   return (
     <Box position="relative" w="100%" h="100%">
-      {items.map((it, i) => {
-        const shouldShiftDown = hovered !== null && i > hovered
-        return (
-          <Box
-            key={it.label}
+      
+          <Button
+            fontFamily="'SF Pro Display Bold'"
+            fontWeight="900"
+            fontSize="6xl"
             position="absolute"
-            top={it.top}
-            left={it.left}
-            transform="translateY(-50%)" >
-            <MotionButton
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              onClick={it.onClick}
-              fontFamily="'SF Pro Display Bold'"
-              fontWeight="900"
-              fontSize="6xl"
-              color="#E6E6E6"
-              bg="transparent"
-              _hover={{ bg: "transparent" }}
-              _active={{ bg: "transparent" }}
-              animate={{ y: shouldShiftDown ? SHIFT_PX : 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 28 }} >
-              {it.label}
-            </MotionButton>
-            <Box position="relative" height={`${SHIFT_PX}px`} mt="2" left="20%">
-              <AnimatePresence>
-                {hovered === i && (
-                  <MotionText
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.22 }}
-                    fontFamily="'SF Pro Display'"
-                    fontWeight="600"
-                    fontSize="2xl"
-                    color="#E6E6E6"
-                    whiteSpace="pre-line" >
-                    {it.hoverText}
-                  </MotionText>)}
-              </AnimatePresence>
-            </Box>
-          </Box>)
-      })}
+            top={items[0].top}
+            left={items[0].left}
+            onClick={console.log("wtf ")}
+            color="#E6E6E6"
+            bg="rgba(255,255,255,0)">{items[0].label}
+          </Button>
+
       <Button
         fontFamily="'SF Pro Display Bold'"
         fontWeight="900"
@@ -76,21 +84,92 @@ const HomeView = ({ items }) => {
         backdropFilter="blur(12px)"
         borderRadius="18px"
         p="12px"
-        color="white"
+        overflow="hidden"
+        zIndex={1}
       >
+        <HStack>
+          <Text fontFamily="'SF Pro Display Bold'"
+            fontWeight="900"
+            fontSize="2xl"
+            color="#E6E6E6" p="3px">Locations</Text>
+          <IconButton
+            onClick={prev}
+            position="absolute"
+            //bottom="18px"
+            right="10%"
+            size="sm"
+            borderRadius="10px"
+            bg="rgba(0,0,0,0.6)"
+            color="white"
+            _hover={{ bg: "rgba(0,0,0,0.75)" }}
+            zIndex={1100}
+            p="3px"
+          ><ChevronLeft /></IconButton>
+
+          {/* Right button */}
+          <IconButton
+
+            onClick={next}
+            position="absolute"
+            //bottom="18px"
+            right="3%"
+            size="sm"
+            borderRadius="10px"
+            bg="rgba(0,0,0,0.6)"
+            color="white"
+            _hover={{ bg: "rgba(0,0,0,0.75)" }}
+            zIndex={1100}
+            p="3px"
+          ><ChevronRight />
+          </IconButton>
+        </HStack>
         <MapContainer
-          center={SCHIEDAM}
+          center={location.coords}
           zoom={13}
-          style={{ width: "100%", height: "100%", borderRadius: "12px" }}
+          zoomControl
+          borderRadius="18px"
+          style={{ borderRadius: "10px", p: "2px", width: "100%", height: "98%" }}
         >
           <TileLayer
-            attribution="© OpenStreetMap contributors"
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution=""
           />
 
-          <Marker position={SCHIEDAM} />
+          {LOCATIONS.map((loc) => (
+            <Marker key={loc.name} position={loc.coords}>
+              <Popup>{loc.name}</Popup>
+            </Marker>
+          ))}
+
+          <FlyToLocation coords={location.coords} />
         </MapContainer>
+
+        {/* Top overlay (location name / coords) */}
+        <Box
+          position="absolute"
+          top="13%"
+          left="50%"
+          transform="translateX(-50%)"
+          px="14px"
+          py="6px"
+          bg="rgba(0,0,0,0.55)"
+          borderRadius="10px"
+          backdropFilter="blur(8px)"
+          pointerEvents="none"
+          zIndex={1100}
+
+        >
+          <Text fontWeight="600" fontSize="sm">
+            {location.name}
+          </Text>
+          <Text fontSize="xs" opacity={0.8}>
+            {location.coords[0].toFixed(4)}, {location.coords[1].toFixed(4)}
+          </Text>
+        </Box>
+
+
       </Box>
+
     </Box >)
 }
 export default HomeView;

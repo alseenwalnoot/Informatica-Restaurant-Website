@@ -53,7 +53,7 @@ export default function DesktopView() {
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
-
+    console.log(currentView)
     if (currentView !== "home") return
 
     const onWheel = (e) => {
@@ -203,11 +203,7 @@ export default function DesktopView() {
           objectFit="contain"
           pointerEvents="none"
         />
-
       </Box>
-
-
-
       {currentView === "menu" && (
         <MenuView onClose={() => setCurrentView("home")} />
       )}
