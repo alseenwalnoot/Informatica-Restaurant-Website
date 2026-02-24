@@ -1,29 +1,22 @@
-import { Box, Button, HStack, IconButton, Text, Spacer } from "@chakra-ui/react"
-import { motion, AnimatePresence } from "framer-motion"
+import {
+  Box,
+  Button,
+  HStack,
+  IconButton,
+  Text,
+  VStack,
+  Flex
+} from "@chakra-ui/react"
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
-import { ChevronLeft, ChevronRight, Icon } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useState, useEffect } from "react"
 import "leaflet/dist/leaflet.css"
-const MotionButton = motion.create(Button)
-const MotionText = motion.create(Text)
 
 const LOCATIONS = [
-  {
-    name: "Schiedam",
-    coords: [51.9167, 4.3986],
-  },
-  {
-    name: "Rotterdam",
-    coords: [51.9244, 4.4777],
-  },
-  {
-    name: "Delft",
-    coords: [52.0116, 4.3571],
-  },
-  {
-    name: "Epstein's gooncave",
-    coords: [51.9055206802406, 4.403329838541286],
-  }
+  { name: "Schiedam", coords: [51.9167, 4.3986] },
+  { name: "Rotterdam", coords: [51.9244, 4.4777] },
+  { name: "Delft", coords: [52.0116, 4.3571] },
+  { name: "Epstein's gooncave", coords: [51.9055206802406, 4.403329838541286] }
 ]
 
 const FlyToLocation = ({ coords }) => {
@@ -39,125 +32,148 @@ const FlyToLocation = ({ coords }) => {
   return null
 }
 
-const HomeView = ({ items }) => {
+const HomeView = () => {
   const [index, setIndex] = useState(0)
   const location = LOCATIONS[index]
 
   const prev = () =>
-    setIndex((i) => (i - 1 + LOCATIONS.length) % LOCATIONS.length)
+    setIndex(i => (i - 1 + LOCATIONS.length) % LOCATIONS.length)
 
   const next = () =>
-    setIndex((i) => (i + 1) % LOCATIONS.length)
+    setIndex(i => (i + 1) % LOCATIONS.length)
+
   return (
-    <Box position="relative" w="100%" h="100%">
-      
+    <Flex
+      w="100vw"
+      h="100vh"
+      px={{ base: 6, md: 16 }}
+      py={{ base: 10, md: 16 }}
+      align="center"
+      justify="space-between"
+      position="relative"
+    >
+      {/* LEFT SIDE MENU */}
+      <VStack
+        align="flex-start"
+        spacing={{ base: 6, md: 8 }}
+        maxW="400px"
+      >
+        {["Menu", "Order", "Locations"].map(label => (
           <Button
-            fontFamily="'SF Pro Display Bold'"
+            key={label}
+            variant="ghost"
+            fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
             fontWeight="900"
-            fontSize="6xl"
-            position="absolute"
-            top={items[0].top}
-            left={items[0].left}
-            onClick={console.log("wtf ")}
+            fontFamily="'SF Pro Display Bold'"
             color="#E6E6E6"
-            bg="rgba(255,255,255,0)">{items[0].label}
+            _hover={{ bg: "transparent", textDecoration: "underline" }}
+            p={0}
+          >
+            {label}
           </Button>
+        ))}
 
-      <Button
-        fontFamily="'SF Pro Display Bold'"
-        fontWeight="900"
-        fontSize="6xl"
-        position="absolute"
-        top="80%"
-        left="18%"
-        color="#E6E6E6"
-        bg="rgba(255,255,255,0)"
-        onClick={() => window.open("https://github.com/alseenwalnoot/Informatica-Restaurant-Website", "_blank")} > About 🠊 </Button>
+        <Box h="40px" />
 
+        <Button
+          variant="ghost"
+          fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+          fontWeight="900"
+          fontFamily="'SF Pro Display Bold'"
+          color="#E6E6E6"
+          _hover={{ bg: "transparent", textDecoration: "underline" }}
+          p={0}
+        >
+          About →
+        </Button>
+      </VStack>
+
+      {/* RIGHT SIDE MAP CARD */}
       <Box
-        position="absolute"
-        top="15%"
-        right="10%"
-        w="40%"
-        h="70%"
+        w={{ base: "100%", md: "45%" }}
+        h={{ base: "55vh", md: "70vh" }}
         bg="rgba(22,22,22,0.45)"
         backdropFilter="blur(12px)"
-        borderRadius="18px"
-        p="12px"
-        overflow="hidden"
-        zIndex={1}
+        borderRadius="20px"
+        p="20px"
+        display="flex"
+        flexDirection="column"
+        position="relative"
       >
-        <HStack>
-          <Text fontFamily="'SF Pro Display Bold'"
+        {/* Header */}
+        <Flex align="center" justify="space-between" mb="12px">
+          <Text
+            fontFamily="'SF Pro Display Bold'"
             fontWeight="900"
             fontSize="2xl"
-            color="#E6E6E6" p="3px">Locations</Text>
-          <IconButton
-            onClick={prev}
-            position="absolute"
-            //bottom="18px"
-            right="10%"
-            size="sm"
-            borderRadius="10px"
-            bg="rgba(0,0,0,0.6)"
-            color="white"
-            _hover={{ bg: "rgba(0,0,0,0.75)" }}
-            zIndex={1100}
-            p="3px"
-          ><ChevronLeft /></IconButton>
+            color="#E6E6E6"
+          >
+            Locations
+          </Text>
 
-          {/* Right button */}
-          <IconButton
+          <HStack spacing="2">
+            <IconButton
+              onClick={prev}
+              size="sm"
+              borderRadius="10px"
+              bg="rgba(0,0,0,0.6)"
+              color="white"
+              _hover={{ bg: "rgba(0,0,0,0.75)" }}
+            >
+              <ChevronLeft />
+            </IconButton>
 
-            onClick={next}
-            position="absolute"
-            //bottom="18px"
-            right="3%"
-            size="sm"
-            borderRadius="10px"
-            bg="rgba(0,0,0,0.6)"
-            color="white"
-            _hover={{ bg: "rgba(0,0,0,0.75)" }}
-            zIndex={1100}
-            p="3px"
-          ><ChevronRight />
-          </IconButton>
-        </HStack>
-        <MapContainer
-          center={location.coords}
-          zoom={13}
-          zoomControl
-          borderRadius="18px"
-          style={{ borderRadius: "10px", p: "2px", width: "100%", height: "98%" }}
+            <IconButton
+              onClick={next}
+              size="sm"
+              borderRadius="10px"
+              bg="rgba(0,0,0,0.6)"
+              color="white"
+              _hover={{ bg: "rgba(0,0,0,0.75)" }}
+            >
+              <ChevronRight />
+            </IconButton>
+          </HStack>
+        </Flex>
+
+        {/* Map wrapper */}
+        <Box
+          flex="1"
+          borderRadius="14px"
+          overflow="hidden"
         >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution=""
-          />
+          <MapContainer
+            center={location.coords}
+            zoom={13}
+            zoomControl
+            style={{ width: "100%", height: "100%" }}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
 
-          {LOCATIONS.map((loc) => (
-            <Marker key={loc.name} position={loc.coords}>
-              <Popup>{loc.name}</Popup>
-            </Marker>
-          ))}
+            {LOCATIONS.map(loc => (
+              <Marker key={loc.name} position={loc.coords}>
+                <Popup>{loc.name}</Popup>
+              </Marker>
+            ))}
 
-          <FlyToLocation coords={location.coords} />
-        </MapContainer>
+            <FlyToLocation coords={location.coords} />
+          </MapContainer>
+        </Box>
 
-        {/* Top overlay (location name / coords) */}
+        {/* Location overlay */}
         <Box
           position="absolute"
-          top="13%"
+          bottom="20px"
           left="50%"
           transform="translateX(-50%)"
           px="14px"
           py="6px"
-          bg="rgba(0,0,0,0.55)"
+          bg="rgba(0,0,0,0.6)"
           borderRadius="10px"
           backdropFilter="blur(8px)"
           pointerEvents="none"
-          zIndex={1100}
-
         >
           <Text fontWeight="600" fontSize="sm">
             {location.name}
@@ -166,10 +182,9 @@ const HomeView = ({ items }) => {
             {location.coords[0].toFixed(4)}, {location.coords[1].toFixed(4)}
           </Text>
         </Box>
-
-
       </Box>
-
-    </Box >)
+    </Flex>
+  )
 }
-export default HomeView;
+
+export default HomeView

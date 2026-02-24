@@ -119,14 +119,15 @@ export default function DesktopView() {
       position="relative"
       overflow="hidden"
       bg="black"
-      touchAction="none"
-    >
+      touchAction={currentView === "home" ? "none" : "auto"}    >
       <MotionBox
         position="absolute"
         top={0}
         left={0}
         w="100%"
         h="100%"
+        zIndex={0}
+  pointerEvents="none"
         bgImage="url('/bg_no_logo.png')"
         //bgSize="cover"
 
