@@ -1,6 +1,6 @@
 
 import { Box, Flex, Image, Center, VStack, Text, Button, Icon, Tabs, Spacer, HStack, Separator } from "@chakra-ui/react"
-
+ 
 import HomeView from "./components/HoverText"
 import MenuView from "./components/MenuView"
 import OrderView from "./components/OrderView"
@@ -105,11 +105,10 @@ export default function DesktopView() {
     }
   }, [currentView])
 
-  const items = [
-    { label: "Menu", hoverText: "Pasta's\n Burgers\n Steakes\n Sides", top: "30%", left: "18%", onClick: () => setCurrentView("menu") },
-    { label: "Order", hoverText: "Track\n Info", top: "38%", left: "18%", onClick: () => setCurrentView("order") },
-   // { label: "Locations", hoverText: "Pickup\n Dine-In", top: "46%", left: "18%", onClick: () => setCurrentView("locations") },
-  ]
+ const views = {
+  menu: () => setCurrentView("menu"),
+  order: () => setCurrentView("order")
+}
 
   return (
     <Box
@@ -158,7 +157,7 @@ export default function DesktopView() {
           h="100%"
           bg="rgba(0,0,0,0.4)"
         />
-        {currentView === "home" && <HomeView items={items}/> }
+        {currentView === "home" && <HomeView views={views}/> }
 
 
 
@@ -174,6 +173,7 @@ export default function DesktopView() {
         display="flex"
         alignItems="center"
         justifyContent="space-between"
+        pointerEvents="none"
       >
         <MotionBox
           style={{ x: textX, opacity: textOpacity }}
@@ -182,8 +182,6 @@ export default function DesktopView() {
           alignItems="flex-start"
           gap="6"
         >
-
-
           <MotionText
             fontFamily="'SF Pro Display Bold'"
             fontWeight="900"
@@ -194,8 +192,9 @@ export default function DesktopView() {
           >
             Good. Food. <br /> Delivered. <br /> <Separator /> Prestige Opulent<Center><MotionIcon style={{ x: iconX }} size="8xl" color="gray"><MoveRight size={120} strokeWidth={1.5} /></MotionIcon></Center>
           </MotionText>
+          
         </MotionBox>
-
+          
         <MotionImage
           src="/hamburger_cheese_onion.png"
           style={{ x: imgX, opacity: textOpacity }}

@@ -1,37 +1,24 @@
-import {
-  Box,
-  Button,
-  HStack,
-  IconButton,
-  Text,
-  VStack,
-  Flex,
-  Spacer,
-  SimpleGrid
-} from "@chakra-ui/react"
+import { Box, Button, HStack, IconButton, Text, VStack, Flex, Spacer, SimpleGrid, Image } from "@chakra-ui/react"
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useState, useEffect } from "react"
 import "leaflet/dist/leaflet.css"
 import { Suspense } from "react"
-import { Canvas } from "@react-three/fiber"
-import { OrbitControls, Stage, useGLTF } from "@react-three/drei"
-import  DishModel from "./3DMenuPreview"
 const menuItems = [
   {
-    title: "Chicken Burger",
-    desc: "Crispy Chicken Patty with melted cheese",
-    model: "/models/ChickenBurger.glb",
+    title: "Cheese Burger",
+    desc: "Burger with some meat",
+    image: "hamburger_cheese_onion.png",
   },
   {
-    title: "Korean BBQ Chicken Wings",
-    desc: "Korean Chicken Wings",
-    model: "/models/KoreanChickenBBQWings.glb",
+    title: "Pasta Bolgonese",
+    desc: "Pasta pizza yesyes itali",
+    image: "pasta.png",
   },
   {
-    title: "Pepperoni Pizza",
-    desc: "Tasty crispy pizza",
-    model: "/models/PepperoniPizza.glb",
+    title: "Steak with Potatoes",
+    desc: "Grilled steak with Potatoes as side",
+    image: "steak_potatoes.png",
   },
 ]
 import { motion, AnimatePresence } from "framer-motion"
@@ -75,7 +62,7 @@ const FlyToLocation = ({ coords }) => {
   return null
 }
 
-const HomeView = () => {
+const HomeView = ({ views }) => {
   const [index, setIndex] = useState(0)
   const location = LOCATIONS[index]
 
@@ -85,7 +72,7 @@ const HomeView = () => {
   const next = () =>
     setIndex(i => (i + 1) % LOCATIONS.length)
 
-  const [activeView, setActiveView] = useState("map")
+  const [activeView, setActiveView] = useState("menuPreview")
   const [direction, setDirection] = useState(1)
 
   return (
@@ -112,7 +99,7 @@ const HomeView = () => {
           fontFamily="'SF Pro Display Bold'"
           color="#E6E6E6"
           _hover={{ bg: "transparent", textDecoration: "underline" }}
-          p={0} onClick={() => { setDirection(1); setActiveView("menu") }}>
+          p={0} onClick={() => { setDirection(1); setActiveView("menuPreview") }}>
           Menu
         </Button>
 
@@ -147,13 +134,15 @@ const HomeView = () => {
         </Button>
         <Box h="40px" />
       </VStack>
-      <Box
-        w={{ base: "80%", md: "45%" }}
-        h={{ base: "55vh", md: "70vh" }}
-        position="relative"
-        overflow="hidden"
-        borderRadius="20px"
-      >
+     <Box
+  w={{ base: "80%", md: "45%" }}
+  h={activeView === "map" ? "60vh" : "auto"}   // 👈
+  minH="200px"
+  right="4%"
+  position="absolute"
+  overflow="hidden"
+  borderRadius="20px"
+>
         <AnimatePresence custom={direction} mode="wait">
           <MotionBox
             key={activeView}
@@ -162,8 +151,10 @@ const HomeView = () => {
             initial="initial"
             animate="animate"
             exit="exit"
-            position="absolute"
-            inset={0}
+            position={activeView === "map" ? "absolute" : "relative"}  // 👈
+      inset={activeView === "map" ? 0 : undefined}               // 👈
+      w="100%"
+      h={activeView === "map" ? "100%" : "auto"} 
             bg="rgba(22,22,22,0.45)"
             backdropFilter="blur(12px)"
             p="20px"
@@ -171,8 +162,8 @@ const HomeView = () => {
             flexDirection="column"
           >
             {activeView === "map" && (
-              <>
-                <Flex align="center" justify="space-between" mb="12px">
+              <Flex direction="column" h="100%">
+                <Flex align="center" justify="space-between" mb="12px" flexShrink={0}>
                   <Text
                     fontFamily="'SF Pro Display Bold'"
                     fontWeight="900"
@@ -210,7 +201,7 @@ const HomeView = () => {
                   center={location.coords}
                   zoom={13}
                   zoomControl
-                  style={{ width: "100%", height: "100%" }}
+                  style={{ width: "100%", flex: 1, minHeight: 0 }}
                 >
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                   {LOCATIONS.map(loc => (
@@ -220,42 +211,55 @@ const HomeView = () => {
                   ))}
                   <FlyToLocation coords={location.coords} />
                 </MapContainer>
-              </>
+              </Flex>
             )}
 
-            {activeView === "menu" && (
-              <Box color="white" fontSize="2xl" fontWeight="900">
-                <SimpleGrid columns={{ base: 1, md: 3 }} spacing="6" px="4" py="8">
-  {menuItems.map((item, i) => (
-    <Box
-      key={i}
-      bg="rgba(255,255,255,0.07)"
-      borderRadius="20px"
-      p="4"
-      textAlign="center"
-    >
-      <Box h="200px">
-        <Canvas camera={{ position: [0, 0, 3] }}>
-          <Suspense fallback={null}>
-            <Stage intensity={0.5}>
-              <DishModel url={item.model} />
-            </Stage>
-            <OrbitControls enableZoom={false} enablePan={false} />
-          </Suspense>
-        </Canvas>
-      </Box>
-      <Text fontSize="xl" fontWeight="bold" mt="4">
-        {item.title}
-      </Text>
-      <Text opacity={0.7} fontSize="md">
-        {item.desc}
-      </Text>
-    </Box>
-  ))}
-</SimpleGrid>
-              </Box>
+            {activeView === "menuPreview" && (
+              <VStack>
+                <HStack gap="10px" width="100%">
+                  {menuItems.map((item, i) => (
+                    <Box
+                      key={i}
+                      flex="1"
+                      minW={0}
+                      minH={0}
+                      bg="rgba(255,255,255,0.06)"
+                      borderRadius="24px"
+                      maxH="100%"
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                      textAlign="center"
+                    > <Image src={item.image}/>
+                    <VStack>
+                      <Spacer/>
+                      <Text fontSize={{ base: "1xl", md: "1xl", lg: "1xl" }}
+          fontWeight="900"
+          fontFamily="'SF Pro Display Bold'"
+          color="#E6E6E6">{item.title}</Text>
+                      <Text fontSize={{ base: "1xl" }}
+          fontWeight="900"
+          fontFamily="'SF Pro Display Bold'"
+          color="#E6E6E6" p="1">{item.desc}</Text>
+                    </VStack>
+                    
+                    </Box>
+                  ))}
+                </HStack>
+                <Button
+                  alignSelf="stretch"
+                  borderRadius="16px"
+                  //py="18px"
+                  fontWeight="900"
+                  bg="rgba(129, 201, 214, 0.66)"
+                  color="white"
+                  _hover={{ opacity: 0.0 }}
+                  onClick={views.menu}
+                >
+                  Menu →
+                </Button>
+              </VStack>
             )}
-
             {activeView === "order" && (
               <Box color="white" fontSize="2xl" fontWeight="900">
                 Order Content

@@ -56,22 +56,24 @@ export default function MenuView({ onClose }) {
     slideCount: data ? data.ret_count : 0
   });
 
-  const category = data.meals
+ 
+  const mealsPerSlide = 6
+  const slides = []
+  const [currentSlide, setCurrentSlide] = useState(0)
+  for (let i = 0; i < data.meals.length; i += mealsPerSlide) {
+    slides.push(data.meals.slice(i, i + mealsPerSlide))
+  }
+
+// Then derive category from current slide only:
+  const category = (slides[currentSlide] ?? [])
     .map(m => m.category)
     .filter(Boolean)
     .map(c => c.trim())
     .filter((v, i, a) => a.indexOf(v) === i)
     .map(c => c.charAt(0).toUpperCase() + c.slice(1).toLowerCase())
     .join(" & ")
+    if (!data) return null;
 
-  if (!data) return null;
-
-  const mealsPerSlide = 6
-  const slides = []
-
-  for (let i = 0; i < data.meals.length; i += mealsPerSlide) {
-    slides.push(data.meals.slice(i, i + mealsPerSlide))
-  }
 
   return (
     <Box>
@@ -107,7 +109,7 @@ export default function MenuView({ onClose }) {
             position="absolute"
             top="12%"
             fontFamily="'SF Pro Display Bold'"
-            fontSize={["1xl", "2xl"]}
+            fontSize={["1xl", "1xl"]}
             fontWeight="900"
           >
             {category}
@@ -220,7 +222,7 @@ export default function MenuView({ onClose }) {
         p="12px"
         color="white"
       >
-        <Carousel.Root allowMouseDrag slideCount={slides.length} w="100%" h="100%">
+        <Carousel.Root allowMouseDrag slideCount={slides.length} w="100%" h="100%" onPageChange={(details) => setCurrentSlide(details.page)}>
           <Carousel.ItemGroup h="100%">
             {slides.map((slide, slideIndex) => (
               <Carousel.Item key={slideIndex} index={slideIndex}>
@@ -284,7 +286,7 @@ export default function MenuView({ onClose }) {
                           borderRadius="12px"
                           bg="rgba(129, 201, 214, 0.66)"
                           color="white"
-                          onClick={() => console.log(it.id)}
+                          onClick={() => console.log(category)}
                         >
                           Add
                         </Button>
