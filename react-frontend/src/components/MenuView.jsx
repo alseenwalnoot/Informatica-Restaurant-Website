@@ -45,21 +45,23 @@ function AdditionBox() {
 
 export default function MenuView({ onClose }) {
   const [data, setData] = useState(errmsg);
-  const cart = [];
+
   useEffect(() => {
     getMealstest().then(setData);
   }, []);
 
+  const [cart, setCart] = useState([])
+
   const cartCounts = cart.reduce((acc, id) => {
-  acc[id] = (acc[id] ?? 0) + 1
-  return acc
-}, {})
+    acc[id] = (acc[id] ?? 0) + 1
+    return acc
+  }, {})
 
   const carousel = useCarousel({
     slideCount: data ? data.ret_count : 0
   });
 
- 
+
   const mealsPerSlide = 6
   const slides = []
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -67,15 +69,15 @@ export default function MenuView({ onClose }) {
     slides.push(data.meals.slice(i, i + mealsPerSlide))
   }
 
-// Then derive category from current slide only:
+  // Then derive category from current slide only:
   const category = (slides[currentSlide] ?? [])
-    .map(m => m.category) 
+    .map(m => m.category)
     .filter(Boolean)
     .map(c => c.trim())
     .filter((v, i, a) => a.indexOf(v) === i)
     .map(c => c.charAt(0).toUpperCase() + c.slice(1).toLowerCase())
     .join(" & ")
-    if (!data) return null;
+  if (!data) return null;
 
 
   return (
@@ -95,48 +97,65 @@ export default function MenuView({ onClose }) {
         <CloseButton variant="ghost" size={["vdw", "1vdw", "2vdw"]} colorPalette="gray" aria-label="Close" onClick={onClose}>
           <ArrowLeftToLine />
         </CloseButton>
-        <Center>
-          <Text
-            position="absolute"
-            top="2%"
-            fontFamily="'SF Pro Display Bold'"
-            fontSize={["2xl", "3xl", "4xl", "5xl", "6x1"]}
-            fontWeight="900"
-          >
-            Our Menu
-          </Text>
-        </Center>
+        <VStack>
+          <Center>
 
-        <Center>
-          <Text
+            <Text
+              position="absolute"
+              top="2%"
+              fontFamily="'SF Pro Display Bold'"
+              fontSize={["2xl", "3xl", "4xl", "5xl", "6x1"]}
+              fontWeight="900"
+            >
+              Our Menu
+            </Text>
+
+            <Text
+              position="absolute"
+              top="10%"
+              fontFamily="'SF Pro Display Bold'"
+              fontSize={["1xl", "2xl"]}
+              fontWeight="900"
+            >
+              {category}
+            </Text>
+          </Center>
+          <Box
             position="absolute"
-            top="12%"
-            fontFamily="'SF Pro Display Bold'"
-            fontSize={["1xl", "1xl"]}
-            fontWeight="900"
+            top="20%"
+            color="white"
+            display="flex"
+            flexDir="column"
+            h="25%"
+            w="80%"
           >
-            {category}
-          </Text>
-        </Center>
-        
-        {Object.entries(cartCounts).map(([id, count]) => {
-          const meal = data.meals.find(m => m.id === Number(id))
-          if (!meal) return null
-          return (
-            <HStack key={id}>
-              <Text flex="1" fontFamily="'SF Pro Display Bold'" fontSize="sm" fontWeight="900">
-                {meal.name}
-              </Text>
-              {count > 1 && <Text fontSize="sm" opacity={0.6}>x{count}</Text>}
-            </HStack>
-          )
-        })}
+
+            <VStack flex="1" overflowY="auto" className="no-scrollbar" alignItems="flex-start">
+              {Object.entries(cartCounts).map(([id, count]) => {
+                const meal = data.meals.find(m => m.id === Number(id))
+                if (!meal) return null
+                return (
+
+                  <HStack key={id}>
+                    <Text flex="1" fontFamily="'SF Pro Display Bold'" fontSize="sm" fontWeight="900">
+                      {meal.name}
+                    </Text>
+                    {count > 1 && <Text fontSize="sm" opacity={0.6}>x{count}</Text>}
+                  </HStack>
+
+                )
+              })}
+            </VStack>
+          </Box>
+        </VStack>
+
+
         <Box
           position="absolute"
-          top="37.5%"
+          top="47.5%"
           left="5%"
           w="91%"
-          h="60%"
+          h="50%"
           bg="rgba(22, 22, 22, 0.45)"
           backdropFilter="blur(12px)"
           borderRadius="18px"
@@ -223,7 +242,7 @@ export default function MenuView({ onClose }) {
           </Box>
         </Box>
 
-      </Box>
+      </Box >
 
       <Box
         position="absolute"
@@ -271,7 +290,7 @@ export default function MenuView({ onClose }) {
                         <IconButton
                           variant="plain"
                           color="rgba(129, 201, 214, 0.66)"
-                          /*onClick={() => decQty(it.id)}*/
+                        /*onClick={() => decQty(it.id)}*/
                         >
                           <ChevronLeft />
                         </IconButton>
@@ -290,7 +309,7 @@ export default function MenuView({ onClose }) {
                         <IconButton
                           variant="plain"
                           color="rgba(129, 201, 214, 0.66)"
-                          /*onClick={() => incQty(it.id)}*/
+                        /*onClick={() => incQty(it.id)}*/
                         >
                           <ChevronRight />
                         </IconButton>
@@ -301,7 +320,7 @@ export default function MenuView({ onClose }) {
                           borderRadius="12px"
                           bg="rgba(129, 201, 214, 0.66)"
                           color="white"
-                          onClick={() => cart.push(it.id)}
+                          onClick={() => setCart(prev => [...prev, it.id])}
                         >
                           Add
                         </Button>
@@ -319,7 +338,7 @@ export default function MenuView({ onClose }) {
         </Carousel.Root>
       </Box>
 
-    </Box>
+    </Box >
   )
 }
 
