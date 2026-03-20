@@ -137,4 +137,5 @@ int main() {
     app.port(8000).multithreaded().run();
 
     sqlite3_close(db);
+    return -1; //returns -1 want fuck ISO C++
 }

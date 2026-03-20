@@ -45,12 +45,15 @@ function AdditionBox() {
 
 export default function MenuView({ onClose }) {
   const [data, setData] = useState(errmsg);
-
+  const cart = [];
   useEffect(() => {
     getMealstest().then(setData);
   }, []);
 
-
+  const cartCounts = cart.reduce((acc, id) => {
+  acc[id] = (acc[id] ?? 0) + 1
+  return acc
+}, {})
 
   const carousel = useCarousel({
     slideCount: data ? data.ret_count : 0
@@ -66,7 +69,7 @@ export default function MenuView({ onClose }) {
 
 // Then derive category from current slide only:
   const category = (slides[currentSlide] ?? [])
-    .map(m => m.category)
+    .map(m => m.category) 
     .filter(Boolean)
     .map(c => c.trim())
     .filter((v, i, a) => a.indexOf(v) === i)
@@ -116,7 +119,18 @@ export default function MenuView({ onClose }) {
           </Text>
         </Center>
         
-
+        {Object.entries(cartCounts).map(([id, count]) => {
+          const meal = data.meals.find(m => m.id === Number(id))
+          if (!meal) return null
+          return (
+            <HStack key={id}>
+              <Text flex="1" fontFamily="'SF Pro Display Bold'" fontSize="sm" fontWeight="900">
+                {meal.name}
+              </Text>
+              {count > 1 && <Text fontSize="sm" opacity={0.6}>x{count}</Text>}
+            </HStack>
+          )
+        })}
         <Box
           position="absolute"
           top="37.5%"
@@ -202,6 +216,7 @@ export default function MenuView({ onClose }) {
               bg="rgba(129, 201, 214, 0.66)"
               color="white"
               fontWeight="700"
+              onClick={() => console.log(cart)}
             >
               Pay
             </Button>
@@ -286,7 +301,7 @@ export default function MenuView({ onClose }) {
                           borderRadius="12px"
                           bg="rgba(129, 201, 214, 0.66)"
                           color="white"
-                          onClick={() => console.log(category)}
+                          onClick={() => cart.push(it.id)}
                         >
                           Add
                         </Button>
