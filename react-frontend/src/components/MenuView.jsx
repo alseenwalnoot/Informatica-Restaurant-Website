@@ -61,6 +61,11 @@ export default function MenuView({ onClose }) {
     slideCount: data ? data.ret_count : 0
   });
 
+  const [qty, setQty] = useState({})
+
+const getQty = (id) => qty[id] ?? 1
+const incQty = (id) => setQty(prev => ({ ...prev, [id]: (prev[id] ?? 1) + 1 }))
+const decQty = (id) => setQty(prev => ({ ...prev, [id]: Math.max(1, (prev[id] ?? 1) - 1) }))
 
   const mealsPerSlide = 6
   const slides = []
@@ -172,7 +177,7 @@ export default function MenuView({ onClose }) {
             >
               Additions
             </Text>
-
+            
             <Flex gap="2" mb="4">
               <VStack spacing="2">
                 <AdditionBox />
@@ -183,7 +188,8 @@ export default function MenuView({ onClose }) {
                 <AdditionBox />
               </VStack>
             </Flex>
-
+              
+              
             <Text
               fontFamily="'SF Pro Display Bold'"
               fontSize="lg"
@@ -288,42 +294,40 @@ export default function MenuView({ onClose }) {
                       </Box>
                       <HStack>
                         <IconButton
-                          variant="plain"
-                          color="rgba(129, 201, 214, 0.66)"
-                        /*onClick={() => decQty(it.id)}*/
-                        >
-                          <ChevronLeft />
-                        </IconButton>
+  variant="plain"
+  color="rgba(129, 201, 214, 0.66)"
+  onClick={() => decQty(it.id)}
+>
+  <ChevronLeft />
+</IconButton>
 
-                        <Box
-                          bg="rgba(22,22,22,0.45)"
-                          backdropFilter="blur(12px)"
-                          borderRadius="6px"
-                          px="12px"
-                          py="6px"
-                        >
-                          <Text>0</Text>
+<Box bg="rgba(22,22,22,0.45)" backdropFilter="blur(12px)" borderRadius="6px" px="12px" py="6px">
+  <Text>{getQty(it.id)}</Text>
+</Box>
 
-                        </Box>
+<IconButton
+  variant="plain"
+  color="rgba(129, 201, 214, 0.66)"
+  onClick={() => incQty(it.id)}
+>
+  <ChevronRight />
+</IconButton>
 
-                        <IconButton
-                          variant="plain"
-                          color="rgba(129, 201, 214, 0.66)"
-                        /*onClick={() => incQty(it.id)}*/
-                        >
-                          <ChevronRight />
-                        </IconButton>
-
-                        <Button
-                          w="40%"
-                          h="36px"
-                          borderRadius="12px"
-                          bg="rgba(129, 201, 214, 0.66)"
-                          color="white"
-                          onClick={() => setCart(prev => [...prev, it.id])}
-                        >
-                          Add
-                        </Button>
+<Button
+  w="40%"
+  h="36px"
+  borderRadius="12px"
+  bg="rgba(129, 201, 214, 0.66)"
+  color="white"
+  onClick={() => {
+    const q = getQty(it.id)
+    if (q === 0) return
+    setCart(prev => [...prev, ...Array(q).fill(it.id)])
+    setQty(prev => ({ ...prev, [it.id]: 1 }))  // reset after adding
+  }}
+>
+  Add
+</Button>
                       </HStack>
                     </Box>
                   ))}
