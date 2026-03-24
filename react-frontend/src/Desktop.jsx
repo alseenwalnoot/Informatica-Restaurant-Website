@@ -4,6 +4,8 @@ import { Box, Flex, Image, Center, VStack, Text, Button, Icon, Tabs, Spacer, HSt
 import HomeView from "./components/HoverText"
 import MenuView from "./components/MenuView"
 import OrderView from "./components/OrderView"
+import PaymentView from "./components/PaymentView"
+
 import { motion, useMotionValue, useTransform, useSpring, animate } from "framer-motion"
 import { useRef, useEffect, useState } from "react"
 import { MoveRight, Minus } from "lucide-react"
@@ -15,7 +17,7 @@ export default function DesktopView() {
   const [currentView, setCurrentView] = useState("home")
   const progress = useMotionValue(0)
   const smooth = useSpring(progress, { stiffness: 200, damping: 30 })
-
+  const [orderId, setOrderId] = useState(null)
   const bg1Scale = useTransform(smooth, [0, 1], [1, 1.05])
   const bg2Scale = useTransform(smooth, [1, 0], [1.05, 1])
   const bg1Opacity = useTransform(smooth, [0, 1], [1, 0])
@@ -205,10 +207,15 @@ export default function DesktopView() {
         />
       </Box>
       {currentView === "menu" && (
-        <MenuView onClose={() => setCurrentView("home")} />
-      )}
+        <MenuView
+    onClose={() => setCurrentView("home")}
+    onPayment={(orderId) => {
+      setOrderId(orderId)       // store it in state
+      setCurrentView("payment")
+    }}
+  />)}
       {currentView === "order" && <OrderView />}
-      
+      {currentView === "payment" && <PaymentView />}
     </Box>
 
 

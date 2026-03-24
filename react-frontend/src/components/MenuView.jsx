@@ -43,7 +43,7 @@ function AdditionBox() {
 }
 
 
-export default function MenuView({ onClose }) {
+export default function MenuView({ onClose, onPayment }) {
   const [data, setData] = useState(errmsg);
 
   useEffect(() => {
@@ -84,6 +84,24 @@ const decQty = (id) => setQty(prev => ({ ...prev, [id]: Math.max(1, (prev[id] ??
     .join(" & ")
   if (!data) return null;
 
+
+  const [form, setForm] = useState({
+    name: '', email: '', city: '', street: '', postcode: ''
+  })
+  const setField = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }))
+
+  const handlePay = async () => {
+    const res = await fetch('http://localhost:8000/api/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...form, cart: Object.entries(cartCounts).flatMap(([id, qty]) => Array(qty).fill(Number(id))) })
+    })
+    console.log("paying", { ...form, cart: Object.entries(cartCounts).flatMap(([id, qty]) => Array(qty).fill(Number(id))) })
+    if (res.ok) {
+      const { order_id } = await res.json()
+      onPayment(order_id)
+    }
+  }
 
   return (
     <Box>
@@ -201,35 +219,25 @@ const decQty = (id) => setQty(prev => ({ ...prev, [id]: Math.max(1, (prev[id] ??
 
             <VStack spacing="1" align="stretch">
               {[
-                ["Your Name", ""],
-                ["Email", "someone@gmail.com"],
-                ["City", "Rotterdam, NL"],
-                ["Street", "Lijnbaan, 432"],
-                ["Post Code", "3024AB"],
-              ].map(([label, placeholder]) => (
-                <HStack key={label} spacing="2">
-                  <Text
-                    w="90px"
-                    fontFamily="'SF Pro Display Bold'"
-                    fontSize="sm"
-                    fontWeight="900"
-                    whiteSpace="nowrap"
-                  >
-                    {label}
-                  </Text>
-
-                  <Input
-                    flex="1"
-                    size="xs"
-                    variant="flushed"
-                    placeholder={placeholder}
-                    py="0"
-                    minH="24px"
-                    fontSize="sm"
-                    colorPalette="gray"
-                  />
-                </HStack>
-              ))}
+                  ["Your Name",  "name",     ""],
+                  ["Email",      "email",    "someone@gmail.com"],
+                  ["City",       "city",     "Rotterdam, NL"],
+                  ["Street",     "street",   "Lijnbaan, 432"],
+                  ["Post Code",  "postcode", "3024AB"],
+                ].map(([label, key, placeholder]) => (
+                  <HStack key={label} spacing="2">
+                    <Text w="90px" fontFamily="'SF Pro Display Bold'" fontSize="sm" fontWeight="900" whiteSpace="nowrap">
+                      {label}
+                    </Text>
+                    <Input
+                      flex="1" size="xs" variant="flushed"
+                      placeholder={placeholder}
+                      value={form[key]}
+                      onChange={setField(key)}
+                      py="0" minH="24px" fontSize="sm" colorPalette="gray"
+                    />
+                  </HStack>
+                ))}
             </VStack>
           </Box>
 
@@ -241,7 +249,7 @@ const decQty = (id) => setQty(prev => ({ ...prev, [id]: Math.max(1, (prev[id] ??
               bg="rgba(129, 201, 214, 0.66)"
               color="white"
               fontWeight="700"
-              onClick={() => console.log(cart)}
+              onClick={handlePay}
             >
               Pay
             </Button>
