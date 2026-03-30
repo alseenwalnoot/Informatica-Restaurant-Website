@@ -143,6 +143,7 @@ const HomeView = ({ views }) => {
   overflow="hidden"
   borderRadius="20px"
 >
+  
         <AnimatePresence custom={direction} mode="wait">
           <MotionBox
             key={activeView}

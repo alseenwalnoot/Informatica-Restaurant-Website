@@ -215,7 +215,7 @@ export default function DesktopView() {
     }}
   />)}
       {currentView === "order" && <OrderView />}
-      {currentView === "payment" && <PaymentView />}
+      {currentView === "payment" && <PaymentView orderId={orderId}/>}
     </Box>
 
 

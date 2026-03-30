@@ -1,7 +1,7 @@
 import { IconButton, Flex, Box, Text, AbsoluteCenter, Center, Carousel, useCarousel, Icon, CloseButton, Button, VStack, HStack, Input, Spacer } from "@chakra-ui/react"
 import { ArrowLeftToLine, ChevronLeft, ChevronRight } from "lucide-react"
-import { useEffect, useState, useRef } from "react";
-
+import { useEffect, useState, useRef, formRef } from "react";
+import DeliveryForm from "./DeliveryForm"
 const errmsg = {
   meals:
     [{ id: -1, category: "NONE", name: "API Returned 404, maybe it is not running?", description: "Error", price: 404, image: "" }], ret_count: 1
@@ -9,16 +9,6 @@ const errmsg = {
 async function getMealstest() {
   try {
     const res = await fetch("http://localhost:8000/api/getmeals/1-105");
-    if (!res.ok) return errmsg;
-    const json = await res.json();
-    return json ?? errmsg;
-  } catch {
-    return errmsg;
-  }
-}
-async function getMeals(from, to) {
-  try {
-    const res = await fetch('http://localhost:8000/api/getmeals/${from}-${to}');
     if (!res.ok) return errmsg;
     const json = await res.json();
     return json ?? errmsg;
@@ -45,7 +35,7 @@ function AdditionBox() {
 
 export default function MenuView({ onClose, onPayment }) {
   const [data, setData] = useState(errmsg);
-
+  const formRef = useRef({})
   useEffect(() => {
     getMealstest().then(setData);
   }, []);
@@ -63,9 +53,9 @@ export default function MenuView({ onClose, onPayment }) {
 
   const [qty, setQty] = useState({})
 
-const getQty = (id) => qty[id] ?? 1
-const incQty = (id) => setQty(prev => ({ ...prev, [id]: (prev[id] ?? 1) + 1 }))
-const decQty = (id) => setQty(prev => ({ ...prev, [id]: Math.max(1, (prev[id] ?? 1) - 1) }))
+  const getQty = (id) => qty[id] ?? 1
+  const incQty = (id) => setQty(prev => ({ ...prev, [id]: (prev[id] ?? 1) + 1 }))
+  const decQty = (id) => setQty(prev => ({ ...prev, [id]: Math.max(1, (prev[id] ?? 1) - 1) }))
 
   const mealsPerSlide = 6
   const slides = []
@@ -195,7 +185,7 @@ const decQty = (id) => setQty(prev => ({ ...prev, [id]: Math.max(1, (prev[id] ??
             >
               Additions
             </Text>
-            
+
             <Flex gap="2" mb="4">
               <VStack spacing="2">
                 <AdditionBox />
@@ -206,54 +196,37 @@ const decQty = (id) => setQty(prev => ({ ...prev, [id]: Math.max(1, (prev[id] ??
                 <AdditionBox />
               </VStack>
             </Flex>
-              
-              
-            <Text
-              fontFamily="'SF Pro Display Bold'"
-              fontSize="lg"
-              fontWeight="900"
-              mb="2"
-            >
+
+
+            <Text fontFamily="'SF Pro Display Bold'" fontSize="lg" fontWeight="900" mb="2">
               Delivery Address
             </Text>
-
-            <VStack spacing="1" align="stretch">
-              {[
-                  ["Your Name",  "name",     ""],
-                  ["Email",      "email",    "someone@gmail.com"],
-                  ["City",       "city",     "Rotterdam, NL"],
-                  ["Street",     "street",   "Lijnbaan, 432"],
-                  ["Post Code",  "postcode", "3024AB"],
-                ].map(([label, key, placeholder]) => (
-                  <HStack key={label} spacing="2">
-                    <Text w="90px" fontFamily="'SF Pro Display Bold'" fontSize="sm" fontWeight="900" whiteSpace="nowrap">
-                      {label}
-                    </Text>
-                    <Input
-                      flex="1" size="xs" variant="flushed"
-                      placeholder={placeholder}
-                      value={form[key]}
-                      onChange={setField(key)}
-                      py="0" minH="24px" fontSize="sm" colorPalette="gray"
-                    />
-                  </HStack>
-                ))}
-            </VStack>
+            <DeliveryForm submitRef={formRef} onSubmit={async (form) => {
+              const res = await fetch('http://localhost:8000/api/order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...form, cart: Object.entries(cartCounts).flatMap(([id, qty]) => Array(qty).fill(Number(id))) })
+              })
+              if (res.ok) {
+                const { order_id } = await res.json()
+                onPayment(order_id)
+              }
+            }} />
           </Box>
 
           <Box p="12px">
             <Button
-              w="100%"
-              h="36px"
-              borderRadius="12px"
+              w="100%" h="36px" borderRadius="12px"
               bg="rgba(129, 201, 214, 0.66)"
-              color="white"
-              fontWeight="700"
-              onClick={handlePay}
+              color="white" fontWeight="700"
+              onClick={() => formRef.current()}
             >
               Pay
             </Button>
           </Box>
+
+
+
         </Box>
 
       </Box >
@@ -302,40 +275,40 @@ const decQty = (id) => setQty(prev => ({ ...prev, [id]: Math.max(1, (prev[id] ??
                       </Box>
                       <HStack>
                         <IconButton
-  variant="plain"
-  color="rgba(129, 201, 214, 0.66)"
-  onClick={() => decQty(it.id)}
->
-  <ChevronLeft />
-</IconButton>
+                          variant="plain"
+                          color="rgba(129, 201, 214, 0.66)"
+                          onClick={() => decQty(it.id)}
+                        >
+                          <ChevronLeft />
+                        </IconButton>
 
-<Box bg="rgba(22,22,22,0.45)" backdropFilter="blur(12px)" borderRadius="6px" px="12px" py="6px">
-  <Text>{getQty(it.id)}</Text>
-</Box>
+                        <Box bg="rgba(22,22,22,0.45)" backdropFilter="blur(12px)" borderRadius="6px" px="12px" py="6px">
+                          <Text>{getQty(it.id)}</Text>
+                        </Box>
 
-<IconButton
-  variant="plain"
-  color="rgba(129, 201, 214, 0.66)"
-  onClick={() => incQty(it.id)}
->
-  <ChevronRight />
-</IconButton>
+                        <IconButton
+                          variant="plain"
+                          color="rgba(129, 201, 214, 0.66)"
+                          onClick={() => incQty(it.id)}
+                        >
+                          <ChevronRight />
+                        </IconButton>
 
-<Button
-  w="40%"
-  h="36px"
-  borderRadius="12px"
-  bg="rgba(129, 201, 214, 0.66)"
-  color="white"
-  onClick={() => {
-    const q = getQty(it.id)
-    if (q === 0) return
-    setCart(prev => [...prev, ...Array(q).fill(it.id)])
-    setQty(prev => ({ ...prev, [it.id]: 1 }))  // reset after adding
-  }}
->
-  Add
-</Button>
+                        <Button
+                          w="40%"
+                          h="36px"
+                          borderRadius="12px"
+                          bg="rgba(129, 201, 214, 0.66)"
+                          color="white"
+                          onClick={() => {
+                            const q = getQty(it.id)
+                            if (q === 0) return
+                            setCart(prev => [...prev, ...Array(q).fill(it.id)])
+                            setQty(prev => ({ ...prev, [it.id]: 1 }))
+                          }}
+                        >
+                          Add
+                        </Button>
                       </HStack>
                     </Box>
                   ))}
