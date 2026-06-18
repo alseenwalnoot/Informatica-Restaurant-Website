@@ -1,4 +1,4 @@
-import { Text, Box, RadioGroup, HStack, Separator, VStack } from "@chakra-ui/react"
+import { Text, Box, RadioGroup, HStack, Separator, VStack, Button, Spacer } from "@chakra-ui/react"
 import { useRef, useEffect, useState } from "react"
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet"
 
@@ -50,6 +50,37 @@ async function getOrder(orderId) {
     return errmsg
   }
 }
+async function getOrderTotal(orderId) {
+  const errmsg = null
+
+  async function getOrder(orderId) {
+    try {
+      const res = await fetch(`http://localhost:8000/api/order/${orderId}`)
+      if (!res.ok) return errmsg
+      return (await res.json()) ?? errmsg
+    } catch {
+      return errmsg
+    }
+  }
+
+  async function getMeal(mealId) {
+    try {
+      const res = await fetch(`http://localhost:8000/api/getmeal/${mealId}`)
+      if (!res.ok) return errmsg
+      return (await res.json()) ?? errmsg
+    } catch {
+      return errmsg
+    }
+  }
+
+  const order = await getOrder(orderId)
+  if (!order) return null
+
+  const meals = await Promise.all(order.cart.map(id => getMeal(id)))
+  if (meals.some(m => m === null)) return null
+
+  return meals.reduce((sum, meal) => sum + meal.price, 0)
+}
 
 export default function PaymentView({ orderId }) {
   const [order, setOrder] = useState(errmsg)
@@ -60,6 +91,11 @@ export default function PaymentView({ orderId }) {
     getOrder(orderId).then(setOrder)
   }, [])
 
+  const [total, setTotal] = useState(null)
+
+  useEffect(() => {
+    getOrderTotal(orderId).then(setTotal)
+  }, [orderId])
   // Once we have the address fields, geocode + fetch route
   useEffect(() => {
     if (!order.street) return
@@ -86,13 +122,13 @@ export default function PaymentView({ orderId }) {
   >
     <HStack align="stretch" h="100%" gap={6}>
       
-      {/* Left: text + delivery options */}
+      {/* Left text */}
       <VStack align="start" justify="start" flex={1} gap={3}>
-        <Text>Name: {order.name}</Text>
-        <Text>Email: {order.email}</Text>
-        <Text>Address: {order.city}, {order.street}, {order.postcode}</Text>
+        <Text>Thanks for ordering at Prestige Opulent!</Text>
+        <Text>Delivery to: {order.city}, {order.street}, {order.postcode}</Text>
         <Separator />
-        <Text>Delivery</Text>
+        <Spacer/>
+        <Text>Delivery Speed</Text>
         <RadioGroup.Root defaultValue="1">
           <HStack gap="6">
             {["Normal", "Fast", "Express"].map((label, i) => (
@@ -104,6 +140,18 @@ export default function PaymentView({ orderId }) {
             ))}
           </HStack>
         </RadioGroup.Root>
+        
+        
+        {orderId !== null && <Text>Order Number: {orderId}</Text>}
+
+        <Button
+          w="100%" h="36px" borderRadius="12px"
+          bg="rgba(129, 201, 214, 0.66)"
+          color="white" fontWeight="700"
+          //onClick={}
+        >
+          Pay{total !== null && <Text>€{total.toFixed(2)}</Text>}
+        </Button>
       </VStack>
 
       {/* Right: map */}

@@ -221,7 +221,7 @@ export default function MenuView({ onClose, onPayment }) {
               color="white" fontWeight="700"
               onClick={() => formRef.current()}
             >
-              Pay
+              To Confirmation
             </Button>
           </Box>
 
