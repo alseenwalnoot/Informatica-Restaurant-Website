@@ -188,11 +188,11 @@ export default function DesktopView() {
             fontFamily="'SF Pro Display Bold'"
             fontWeight="900"
             fontSize={["4xl", "5xl", "6xl", "7xl"]}
-            color="#131313ff"
+            color="#dbcece"
             textAlign="center"
             whiteSpace="nowrap"
           >
-            Good. Food. <br /> Delivered. <br /> <Separator /> Prestige Opulent<Center><MotionIcon style={{ x: iconX }} size="8xl" color="gray"><MoveRight size={120} strokeWidth={1.5} /></MotionIcon></Center>
+            Good. Food. <br /> Delivered. <br /> <Separator /> Prestige Opulent<Center><MotionIcon style={{ x: iconX }} size="8xl" color="#dbceceea"><MoveRight size={120} strokeWidth={1.5} /></MotionIcon></Center>
           </MotionText>
           
         </MotionBox>

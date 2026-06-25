@@ -6,18 +6,18 @@ import "leaflet/dist/leaflet.css"
 import { Suspense } from "react"
 const menuItems = [
   {
-    title: "Cheese Burger",
-    desc: "Burger with some meat",
+    title: "Beef Cheese Burger",
+    desc: "Beef patty with molten fermeted milk, encapsulated in a crusty mix of bread and additions.",
     image: "hamburger_cheese_onion.png",
   },
   {
-    title: "Pasta Bolgonese",
-    desc: "Pasta pizza yesyes itali",
+    title: "Pasta d'Boglognese",
+    desc: "Authentic Italian Spaghetti, combined with a fusion of sauce, meat, spices, and flavours.",
     image: "pasta.png",
   },
   {
-    title: "Steak with Potatoes",
-    desc: "Grilled steak with Potatoes as side",
+    title: "Grilled Steak Potatoes",
+    desc: "A Steak ingulfed in sauces, with perfect Potatoes as side. Complete with spices to sauce.",
     image: "steak_potatoes.png",
   },
 ]
@@ -97,7 +97,7 @@ const HomeView = ({ views }) => {
           fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
           fontWeight="900"
           fontFamily="'SF Pro Display Bold'"
-          color="#E6E6E6"
+          color="#dbcece"
           _hover={{ bg: "transparent", textDecoration: "underline" }}
           p={0} onClick={() => { setDirection(1); setActiveView("menuPreview") }}>
           Menu
@@ -107,7 +107,7 @@ const HomeView = ({ views }) => {
           fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
           fontWeight="900"
           fontFamily="'SF Pro Display Bold'"
-          color="#E6E6E6"
+          color="#dbcece"
           _hover={{ bg: "transparent", textDecoration: "underline" }}
           p={0} onClick={() => { setDirection(1); setActiveView("order") }}>
           Order
@@ -117,7 +117,7 @@ const HomeView = ({ views }) => {
           fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
           fontWeight="900"
           fontFamily="'SF Pro Display Bold'"
-          color="#E6E6E6"
+          color="#dbcece"
           _hover={{ bg: "transparent", textDecoration: "underline" }}
           p={0} onClick={() => { setDirection(1); setActiveView("map") }}>
           Locations
@@ -127,7 +127,7 @@ const HomeView = ({ views }) => {
           fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
           fontWeight="900"
           fontFamily="'SF Pro Display Bold'"
-          color="#E6E6E6"
+          color="#dbcece"
           _hover={{ bg: "transparent", textDecoration: "underline" }}
           p={0} onClick={() => { setDirection(1); setActiveView("about") }}>
           About →
@@ -238,8 +238,8 @@ const HomeView = ({ views }) => {
           fontWeight="900"
           fontFamily="'SF Pro Display Bold'"
           color="#E6E6E6">{item.title}</Text>
-                      <Text fontSize={{ base: "1xl" }}
-          fontWeight="900"
+                      <Text fontSize={{ base: "xs" }}
+          fontWeight="90"
           fontFamily="'SF Pro Display Bold'"
           color="#E6E6E6" p="1">{item.desc}</Text>
                     </VStack>
