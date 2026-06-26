@@ -1,7 +1,8 @@
-import { Box, Button, HStack, IconButton, Text, VStack, Flex, Spacer, SimpleGrid, Image } from "@chakra-ui/react"
+import { Box, Button, HStack, IconButton, Text, VStack, Flex, Spacer, SimpleGrid, Image, Input } from "@chakra-ui/react"
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import "leaflet/dist/leaflet.css"
 import { Suspense } from "react"
 const menuItems = [
@@ -75,6 +76,10 @@ const HomeView = ({ views }) => {
   const [activeView, setActiveView] = useState("menuPreview")
   const [direction, setDirection] = useState(1)
 
+  const [postcode, setPostcode] = useState("")
+  const [orderIdInput, setOrderIdInput] = useState("")
+  const navigate = useNavigate()
+
   return (
     <Flex
       w="100vw"
@@ -107,7 +112,7 @@ const HomeView = ({ views }) => {
           fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
           fontWeight="900"
           fontFamily="'SF Pro Display Bold'"
-          color="#dbcece"
+          color="#dbceceea"
           _hover={{ bg: "transparent", textDecoration: "underline" }}
           p={0} onClick={() => { setDirection(1); setActiveView("order") }}>
           Order
@@ -117,7 +122,7 @@ const HomeView = ({ views }) => {
           fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
           fontWeight="900"
           fontFamily="'SF Pro Display Bold'"
-          color="#dbcece"
+          color="#dbceceea"
           _hover={{ bg: "transparent", textDecoration: "underline" }}
           p={0} onClick={() => { setDirection(1); setActiveView("map") }}>
           Locations
@@ -127,7 +132,7 @@ const HomeView = ({ views }) => {
           fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
           fontWeight="900"
           fontFamily="'SF Pro Display Bold'"
-          color="#dbcece"
+          color="#dbceceea"
           _hover={{ bg: "transparent", textDecoration: "underline" }}
           p={0} onClick={() => { setDirection(1); setActiveView("about") }}>
           About →
@@ -155,7 +160,9 @@ const HomeView = ({ views }) => {
             position={activeView === "map" ? "absolute" : "relative"}  // 👈
       inset={activeView === "map" ? 0 : undefined}               // 👈
       w="100%"
-      h={activeView === "map" ? "100%" : "auto"} 
+      h={activeView === "map" ? "60vh" : activeView === "order" ? "auto" : "auto"}
+maxH={activeView === "map" ? "60vh" : "70vh"}
+overflowY={activeView === "order" ? "auto" : "hidden"} 
             bg="rgba(22,22,22,0.45)"
             backdropFilter="blur(12px)"
             p="20px"
@@ -169,7 +176,7 @@ const HomeView = ({ views }) => {
                     fontFamily="'SF Pro Display Bold'"
                     fontWeight="900"
                     fontSize="2xl"
-                    color="#E6E6E6"
+                    color="#dbceceea"
                   >
                     Locations
                   </Text>
@@ -237,11 +244,11 @@ const HomeView = ({ views }) => {
                       <Text fontSize={{ base: "1xl", md: "1xl", lg: "1xl" }}
           fontWeight="900"
           fontFamily="'SF Pro Display Bold'"
-          color="#E6E6E6">{item.title}</Text>
+          color="#dbceceea">{item.title}</Text>
                       <Text fontSize={{ base: "xs" }}
           fontWeight="90"
           fontFamily="'SF Pro Display Bold'"
-          color="#E6E6E6" p="1">{item.desc}</Text>
+          color="#dbceceea" p="1">{item.desc}</Text>
                     </VStack>
                     
                     </Box>
@@ -262,10 +269,39 @@ const HomeView = ({ views }) => {
               </VStack>
             )}
             {activeView === "order" && (
-              <Box color="white" fontSize="2xl" fontWeight="900">
-                Order Content
-              </Box>
-            )}
+  <VStack align="start" gap={3} color="white">
+    <Text fontSize="2xl" fontWeight="900" fontFamily="'SF Pro Display Bold'" color="#dbceceea">Track Order</Text>
+    <Text fontSize="sm" color="#dbceceea">Enter your order number and postcode to track your delivery.</Text>
+    <Input
+      variant="flushed"
+      placeholder="Postcode (e.g. 3024AB)"
+      value={postcode}
+      onChange={e => setPostcode(e.target.value)}
+      color="white"
+      borderColor="whiteAlpha.400"
+      _placeholder={{ color: "whiteAlpha.400" }}
+    />
+    <Input
+      variant="flushed"
+      placeholder="Order number"
+      value={orderIdInput}
+      onChange={e => setOrderIdInput(e.target.value)}
+      color="white"
+      borderColor="whiteAlpha.400"
+      _placeholder={{ color: "whiteAlpha.400" }}
+    />
+    <Button
+      alignSelf="stretch"
+      borderRadius="12px"
+      bg="rgba(129, 201, 214, 0.66)"
+      color="white"
+      fontWeight="700"
+      onClick={() => navigate(`/track/${postcode.trim()}/${orderIdInput.trim()}`)}
+    >
+      Track →
+    </Button>
+  </VStack>
+)}
 
             {activeView === "about" && (
               <Box color="white" fontSize="2xl" fontWeight="900">

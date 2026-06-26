@@ -24,11 +24,68 @@ const compactInput = {
   minH: "24px",
   fontSize: "sm",
 }
-
-
-function AdditionBox() {
+function AdditionBox({ title, subtitle, price, onClick }) {
   return (
-    <Box w="9.5dvw" h="10dvh" borderRadius="10px" bg="rgba(255, 255, 255, 1)" color="white"></Box>
+    <Box
+      w="100%"
+      h="10dvh"
+      minH="90px"
+      borderRadius="16px"
+      px="12px"
+      py="10px"
+      display="flex"
+      flexDir="column"
+      justifyContent="space-between"
+      overflow="hidden"
+      bg="rgba(8,8,8,0.35)"
+      backdropFilter="blur(12px)"
+      border="1px solid rgba(255,255,255,0.06)"
+      boxShadow="
+        inset 4px 4px 10px rgba(0,0,0,0.65),
+        inset -2px -2px 6px rgba(255,255,255,0.03)
+      "
+    >
+      {/* Explicitly force width constraints here */}
+      <Box w="100%" minW={0}>
+        <Text
+          fontFamily="'SF Pro Display Bold'"
+          fontWeight="900"
+          fontSize="md"
+          whiteSpace="nowrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          w="100%"
+        >
+          {title}
+        </Text>
+
+        <Text
+          fontSize="xs"
+          opacity={0.65}
+          whiteSpace="nowrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          w="100%"
+        >
+          {subtitle}
+        </Text>
+      </Box>
+
+      <Button
+        h="28px"
+        w="100%"
+        flexShrink={0}
+        borderRadius="10px"
+        bg="rgba(129, 201, 214, 0.66)"
+        color="white"
+        fontSize="sm"
+        fontWeight="700"
+        whiteSpace="nowrap"
+        onClick={onClick}
+      >
+        + €{Number(price).toFixed(2)}
+      </Button>
+    </Box>
   )
 }
 
@@ -105,7 +162,7 @@ export default function MenuView({ onClose, onPayment }) {
         backdropFilter="blur(12px)"
         borderRadius="18px"
         p="20px"
-        color="white"
+        color="#dbceceea"
       >
         <CloseButton variant="ghost" size={["vdw", "1vdw", "2vdw"]} colorPalette="gray" aria-label="Close" onClick={onClose}>
           <ArrowLeftToLine />
@@ -172,7 +229,7 @@ export default function MenuView({ onClose, onPayment }) {
           bg="rgba(22, 22, 22, 0.45)"
           backdropFilter="blur(12px)"
           borderRadius="18px"
-          color="white"
+          color="#dbceceea"
           display="flex"
           flexDir="column"
         >
@@ -182,20 +239,24 @@ export default function MenuView({ onClose, onPayment }) {
               fontSize="lg"
               fontWeight="900"
               mb="2"
+              color=""
             >
               Additions
             </Text>
 
-            <Flex gap="2" mb="4">
-              <VStack spacing="2">
-                <AdditionBox />
-                <AdditionBox />
-              </VStack>
-              <VStack spacing="2">
-                <AdditionBox />
-                <AdditionBox />
-              </VStack>
-            </Flex>
+            <Flex gap="2" mb="4" w="100%"> 
+  {/* Add minW={0} to the vertical stacks */}
+  <VStack flex="1" align="stretch" spacing="2" minW={0}>
+    <AdditionBox title="Extra Cutlery" subtitle="Cutlery will be included in your order." price="15.00"/>
+    <AdditionBox title="Safe delivery" subtitle="Deliverer will be weaponized." price="40.00"/>
+  </VStack>
+  
+  <VStack flex="1" align="stretch" spacing="2" minW={0}>
+    <AdditionBox title="Extra Spices" subtitle="More spicyness will be added where applicable." price="10.00"/>
+    <AdditionBox title="Bigger Drinks" subtitle="Up to 10 drinks will be made bigger." price="15.00"/>
+  </VStack>
+</Flex>
+
 
 
             <Text fontFamily="'SF Pro Display Bold'" fontSize="lg" fontWeight="900" mb="2">
@@ -241,7 +302,7 @@ export default function MenuView({ onClose, onPayment }) {
         backdropFilter="blur(12px)"
         borderRadius="18px"
         p="12px"
-        color="white"
+        color="#dbceceea"
       >
         <Carousel.Root allowMouseDrag slideCount={slides.length} w="100%" h="100%" onPageChange={(details) => setCurrentSlide(details.page)}>
           <Carousel.ItemGroup h="100%">
@@ -318,7 +379,13 @@ export default function MenuView({ onClose, onPayment }) {
           </Carousel.ItemGroup>
 
           <Carousel.Control justifyContent="center" mt="6">
-            <Carousel.Indicators />
+            <Carousel.Indicators /> <Text 
+              as="span" 
+              fontSize="xs"    
+              fontStyle="italic"
+              verticalAlign="sub" 
+              ml="1"              
+            >* Use Shift+Scroll or drag.</Text>
           </Carousel.Control>
         </Carousel.Root>
       </Box>

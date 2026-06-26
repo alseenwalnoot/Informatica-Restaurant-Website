@@ -86,13 +86,22 @@ export default function PaymentView({ orderId }) {
   const [order, setOrder] = useState(errmsg)
   const [routeCoords, setRouteCoords] = useState(null)
   const [destCoords, setDestCoords] = useState(null)
+  const [sending, setSending] = useState(false)
+  const [deliveryFee, setDeliveryFee] = useState(0);
+  
+
+  const deliveryOptions = [
+    { id: "1", label: "Normal", price: 0 },
+    { id: "2", label: "Fast", price: 2.70 },
+    { id: "3", label: "Express", price: 5.30 },
+  ];
 
   useEffect(() => {
     getOrder(orderId).then(setOrder)
   }, [])
 
   const [total, setTotal] = useState(null)
-
+  const finalTotal = total + deliveryFee; 
   useEffect(() => {
     getOrderTotal(orderId).then(setTotal)
   }, [orderId])
@@ -106,6 +115,28 @@ export default function PaymentView({ orderId }) {
       fetchRoute(RESTAURANT.coords, dest).then(setRouteCoords)
     })
   }, [order])
+  
+
+  const handlePay = async () => {
+    setSending(true)
+    try {
+      const res = await fetch("http://localhost:8000/api/sendreceipt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order_id: orderId })
+      })
+      const data = await res.json()
+      if (data.ok) {
+        window.location.href = data.tracking_url
+      } else {
+        console.error("Receipt failed:", data)
+      }
+    } catch (e) {
+      console.error("Receipt error:", e)
+    } finally {
+      setSending(false)
+    }
+  }
 
   return (
   <Box
@@ -118,28 +149,39 @@ export default function PaymentView({ orderId }) {
     backdropFilter="blur(12px)"
     borderRadius="18px"
     p="20px"
-    color="white"
+    color="#dbceceea"
   >
     <HStack align="stretch" h="100%" gap={6}>
       
       {/* Left text */}
       <VStack align="start" justify="start" flex={1} gap={3}>
-        <Text>Thanks for ordering at Prestige Opulent!</Text>
-        <Text>Delivery to: {order.city}, {order.street}, {order.postcode}</Text>
+        <Text>Thanks for ordering at Prestige Opulent!<br/>Your order will get processed as fast as possible after you pay. After payment, check your e-mail inbox for a confirmation and a tracking link.</Text>
+        <Text>Delivery to: {order.city}, {order.street}, {order.postcode}<br/>Estimated delivery time: 35 Minutes.</Text>
         <Separator />
         <Spacer/>
-        <Text>Delivery Speed</Text>
-        <RadioGroup.Root defaultValue="1">
-          <HStack gap="6">
-            {["Normal", "Fast", "Express"].map((label, i) => (
-              <RadioGroup.Item key={i} value={String(i + 1)}>
-                <RadioGroup.ItemHiddenInput />
-                <RadioGroup.ItemIndicator />
-                <RadioGroup.ItemText>{label}</RadioGroup.ItemText>
-              </RadioGroup.Item>
-            ))}
-          </HStack>
-        </RadioGroup.Root>
+        <Text fontWeight="bold" mb="2">Delivery Speed</Text>
+      <RadioGroup.Root 
+        defaultValue="1" 
+        onValueChange={(details) => {
+          const opt = deliveryOptions.find(o => o.id === details.value);
+          if (opt) setDeliveryFee(opt.price); // Simply updates the delivery addon
+        }}
+      >
+        <HStack gap="6">
+          {deliveryOptions.map((opt) => (
+            <RadioGroup.Item key={opt.id} value={opt.id}>
+              <RadioGroup.ItemHiddenInput />
+              <RadioGroup.ItemIndicator />
+              <HStack gap="1" display="inline-flex" alignItems="center">
+                <RadioGroup.ItemText>{opt.label}</RadioGroup.ItemText>
+                <Text as="span" fontSize="2xs" fontStyle="italic" opacity={0.65}>
+                  (+ €{opt.price.toFixed(2)})
+                </Text>
+              </HStack>
+            </RadioGroup.Item>
+          ))}
+        </HStack>
+      </RadioGroup.Root>
         
         
         {orderId !== null && <Text>Order Number: {orderId}</Text>}
@@ -148,9 +190,10 @@ export default function PaymentView({ orderId }) {
           w="100%" h="36px" borderRadius="12px"
           bg="rgba(129, 201, 214, 0.66)"
           color="white" fontWeight="700"
-          //onClick={}
+          onClick={handlePay}
+          loading={sending}
         >
-          Pay{total !== null && <Text>€{total.toFixed(2)}</Text>}
+          Pay{finalTotal !== null && <Text>€{finalTotal.toFixed(2)}</Text>}
         </Button>
       </VStack>
 

@@ -3,7 +3,6 @@ import { Box, Flex, Image, Center, VStack, Text, Button, Icon, Tabs, Spacer, HSt
  
 import HomeView from "./components/HoverText"
 import MenuView from "./components/MenuView"
-import OrderView from "./components/OrderView"
 import PaymentView from "./components/PaymentView"
 
 import { motion, useMotionValue, useTransform, useSpring, animate } from "framer-motion"
