@@ -1,35 +1,22 @@
 
 # **[Prestige Opulent Website](https://walnutstudios.uk)**
 ## Voorwoord
-Het is lastig om een react website met frontend en backend multiplatform te maken, ik heb dit wel gedaan, hij runt nu op linux EN windows, voor windows kan je de
-releases/app.exe gebruiken (dubbelklikken vanuit de folder) (deze heb je gekregen in het zip bestandje), dit launcht de backend en frontend op http://localhost:8000
+Nooit. Meer. PHP.
+Het is niet eens PHP zelf, het is oud, tuurlijk maar werkt nog. Maar XAMPP??? Mijn C++ backend was zoveel beter op elke manier in elke richting dan ook.
 
-## **Windows port (compileren)**
-### Stap 1 JavaScript
-Download NodeJS van https://nodejs.org/en
-Als het vraagt om extra dingen/tools, KLIK JA dit scheelt je zelf msvc installeren, want Node doet dit dan allemaal voor je
+Met zelf runnen werkt de website, maar zul je niet de tracking functionaliteit kunnen gebruiken (Die links gaan namelijk naar de gedeployde versie, en als je een order aanmaakt zal die natuurlijk niet ineens op mijn server verschijnen). Het mailsysteem zal wel werken sinds de php backend gewoon mijn mailservers aantikt. Voor de volledige functionaliteit en stabiliteit is het gewoon makkelijker om de gedeployde stabiele versie te gebruiken.
 
-### Stap 2 SQLite
-SQLite is nodig voor database handling en asio voor Crow's webserver handling,
-installeer eerst vcpkg:
-```
-git clone https://github.com/microsoft/vcpkg 
-cd vcpkg 
-.\bootstrap-vcpkg.bat
-```
-dan asio en sqlite installeren:
-```
-.\vcpkg install sqlite3:x64-windows 
-.\vcpkg install asio:x64-windows 
-```
-en als laatste vcpkg globaal maken:
-```setx VCPKG_ROOT "PATH\TO\VCPKG"```
-### Stap 2 C++ MSVC 
-### (als je het niet heb gedaan bij NodeJS Installer)
-Je zult Visual Studio Community moeten downloaden van
-https://visualstudio.microsoft.com/
-Tijdens het downloaded zul je MSVC C++ build tools ofz moeten verkrijgen
+Sinds deze hele website vrijwel gewoon echt is behalve dat het restaurant niet bestaat, wil ik je ook vragen om echte data in te voeren. (Dus niet mrincredible@coolemail.com maar gewoon g.lodder@spieringshoek.nl ofzo. En geen 6767EE als postcode maar gewoon een echte. (ook een echte locatie) sinds je dan een mail krijgt met tracking en dergelijken.
 
-## **Linux port (compileren)**
-### Stap 1 Alle dependencies downloaden
-Doe '''make all''' in de folder van linux-cpp-backend en kijk voor de errors en download de benodigdheden
+## Runnen
+Om de site zelf te runnen doe je ```git clone -b windows --single-branch https://github.com/alseenwalnoot/Informatica-Restaurant-Website.git```
+Dan doe je gewoon ```run.bat``` vanuit de project root. (dus niet zelf gaan spelen met xampp, dat hoeft niet).
+De website zal starten op ```localhost:8000```. 
+
+## Notities
+Het is genuinely terrible om servered websites te runnen op windows. Laat staan bouwen.
+Om de website te compileren naar ```dist-xampp\``` moet je de Node Package Manager geinstalleerd hebben op je computer (npm), dan doe je ```cd react-frontend\``` en dan ```npm install```. 
+Vervolgens doe je ```cd ..``` en ```build.bat``` (hier staan mogelijk incorrecte instructies), en dan is de website gecompileerd.
+
+In het geval dat ```run.bat``` klaagt over php extensies die niet aanstaan, moet je toch in xampp's Apache configs (php.ini) de php-curl extensie en php-sqlite aanzetten (je uncomment dus ```extension=curl``` en ```extension=sqlite3```).
+Verderest hoef je xampp niet aan te raken.
