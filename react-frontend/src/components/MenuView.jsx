@@ -8,7 +8,7 @@ const errmsg = {
 }
 async function getMealstest() {
   try {
-    const res = await fetch("http://localhost:8000/api/getmeals/1-105");
+    const res = await fetch("/api/getmeals/1-105");
     if (!res.ok) return errmsg;
     const json = await res.json();
     return json ?? errmsg;
@@ -138,7 +138,7 @@ export default function MenuView({ onClose, onPayment }) {
   const setField = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }))
 
   const handlePay = async () => {
-    const res = await fetch('http://localhost:8000/api/order', {
+    const res = await fetch('/api/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...form, cart: Object.entries(cartCounts).flatMap(([id, qty]) => Array(qty).fill(Number(id))) })
@@ -263,7 +263,7 @@ export default function MenuView({ onClose, onPayment }) {
               Delivery Address
             </Text>
             <DeliveryForm submitRef={formRef} onSubmit={async (form) => {
-              const res = await fetch('http://localhost:8000/api/order', {
+              const res = await fetch('/api/order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...form, cart: Object.entries(cartCounts).flatMap(([id, qty]) => Array(qty).fill(Number(id))) })
@@ -393,5 +393,9 @@ export default function MenuView({ onClose, onPayment }) {
     </Box >
   )
 }
+
+
+
+
 
 

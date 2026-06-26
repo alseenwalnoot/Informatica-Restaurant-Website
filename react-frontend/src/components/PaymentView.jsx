@@ -120,7 +120,7 @@ export default function PaymentView({ orderId }) {
   const handlePay = async () => {
     setSending(true)
     try {
-      const res = await fetch("http://localhost:8000/api/sendreceipt", {
+      const res = await fetch("/api/sendreceipt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ order_id: orderId })
@@ -228,3 +228,7 @@ export default function PaymentView({ orderId }) {
 
   )
 }
+
+
+
+

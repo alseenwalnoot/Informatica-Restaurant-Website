@@ -1,4 +1,17 @@
 <?php
+$uri = $_SERVER['REQUEST_URI'];
+
+// Serve static files directly
+if ($uri === '/' || $uri === '') {
+    readfile(__DIR__ . '/index.html');
+    exit;
+}
+
+// Strip query string for file check
+$path = __DIR__ . strtok($uri, '?');
+if (file_exists($path) && !is_dir($path)) {
+    return false; // Let PHP built-in server handle it
+}
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
